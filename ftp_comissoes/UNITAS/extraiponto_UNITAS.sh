@@ -131,5 +131,5 @@ while [ $n -le 360 ]; do
 		echo ""
 		exit 343
 	fi
-n=n+1
+n=$n+1
 done
