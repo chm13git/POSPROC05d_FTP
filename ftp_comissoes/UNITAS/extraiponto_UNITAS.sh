@@ -37,10 +37,12 @@ DD=`echo ${datahoje} | cut -c7-8`
 if [ ${PREV} == "ope" ];then
 
 	rodada="OPE"
+	RR=12
 
 elif [ ${PREV} == "con" ];then
 
 	rodada="CON"
+	RR=24
 
 else
 
@@ -56,6 +58,9 @@ arqatmz="/home/operador/grads/cosmo/cosmosse22/ctl/ctl${HH}/cosmo_sse22_${HH}_Z.
 arqond="/home/operador/grads/ww3_418/ww3icon/ww3met/work/ww3.ctl"
 arqoce="/mnt/nfs/dpns32/data1/operador/previsao/hycom_2_2/output/Previsao_1_12/Ncdf/${ANO}${MM}${DD}/HYCOM_MV_${ANO}${MM}${DD}.nc"
 
+# Definindo caminhos
+dir_unitas="/home/operador/ftp_comissoes/UNITAS"
+
 # Testa por 360 ciclos de 30s
 n=0
 while [ $n -le 360 ]; do
@@ -70,7 +75,7 @@ while [ $n -le 360 ]; do
 
 		ln -sf /home/operador/grads/ww3_418/ww3icon/ww3met/work/ww3.grads .
 
-		arq="/home/operador/ftp_comissoes/UNITAS/lista"
+		arq="${dir_unitas}/lista"
 		tr -d '\r' < $arq > raw.txt
 		mv raw.txt $arq
 
@@ -85,23 +90,23 @@ while [ $n -le 360 ]; do
 
 			if [ ${rodada} == "OPE" ];then
 		
-				cat dadosponto_UNITAS_OPE.gs > raw_extraiponto.gs
+				cat ${dir_unitas}/dadosponto_UNITAS_OPE.gs > raw_extraiponto.gs
 
 			else
 
-				cat dadosponto_UNITAS_CON.gs > raw_extraiponto.gs
+				cat ${dir_unitas}/dadosponto_UNITAS_CON.gs > raw_extraiponto.gs
 	
 			fi
 
 
-			sed -i 's/ANO/'${ANO}'/g' raw_extraiponto.gs
-			sed -i 's/MM/'${MM}'/g' raw_extraiponto.gs
-			sed -i 's/DD/'${DD}'/g' raw_extraiponto.gs
-			sed -i 's/HH/'${HH}'/g' raw_extraiponto.gs
-			sed -i 's/LOCAL/'${loca}'/g' raw_extraiponto.gs
-			sed -i 's/LATI/'${LATI}'/g' raw_extraiponto.gs
-			sed -i 's/LONG/'${LONG}'/g' raw_extraiponto.gs
-			sed -i 's/RODA/'${rodada}'/g' raw_extraiponto.gs
+			sed -i 's/ANO/'${ANO}'/g'	raw_extraiponto.gs
+			sed -i 's/MM/'${MM}'/g'		raw_extraiponto.gs
+			sed -i 's/DD/'${DD}'/g'		raw_extraiponto.gs
+			sed -i 's/HH/'${HH}'/g'		raw_extraiponto.gs
+			sed -i 's/LOCAL/'${loca}'/g'	raw_extraiponto.gs
+			sed -i 's/LATI/'${LATI}'/g'	raw_extraiponto.gs
+			sed -i 's/LONG/'${LONG}'/g'	raw_extraiponto.gs
+			sed -i 's/RODA/'${rodada}'/g'	raw_extraiponto.gs
 
 			cat raw_extraiponto.gs
 
@@ -109,15 +114,25 @@ while [ $n -le 360 ]; do
 			opengrads -bpc raw_extraiponto.gs
 
 			sed -i 's/ //g' meteograma_UNITAS_${loca}_${HH}.txt
-			mv meteograma_UNITAS_${loca}_${HH}.txt ~/ftp_comissoes/UNITAS/UNITAS_${loca}_${HH}_${rodada}.txt
-			scp ~/ftp_comissoes/UNITAS/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
-			scp ~/ftp_comissoes/UNITAS/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
+			mv meteograma_UNITAS_${loca}_${HH}.txt ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt
+			scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
+			scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
+
+			rm raw_extraiponto.gs
+			rm ww3.grads
+
+			# Testando se o tamanho e a data dos arquivos estao corretos
+			if [ `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -gt 1000 ] && [ `cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == `caldate ${datahoje} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]` ]; then
+				echo "Arquivos gerados corretamente. PROCESSO ENCERRADO COM SUCESSO!"
+				exit 111
+			else
+				echo "Arquivos NAO foram gerados corretamente! ***VERIFICAR PROBLEMA!***"
+				exit
+			fi
 
 		done
 
 		#echo "Abrir o arquivo anexado e colar na tabela" | mail -s "Dados Pontos COSMO/WW3COSMO ${HH}" neris@marinha.mil.br -A meteograma_cosmo_ww3cosmo_${LATI}_${LONG}_${HH}.txt
-
-		rm raw_extraiponto.gs
 
 	else
 		echo "Alguns arquivos NAO foram encontrados. Vou aguardar 30s..."
@@ -131,5 +146,5 @@ while [ $n -le 360 ]; do
 		echo ""
 		exit 343
 	fi
-n=$n+1
+	n=$(( $n+1 ))
 done
