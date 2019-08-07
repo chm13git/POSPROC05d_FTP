@@ -161,11 +161,11 @@ RFILE2=gfs.t${HH}z.pgrb2.0p25.f${prog}
 
 		if [ $prog == "000" ];then
 
-        		valor=354
+        		valor=520
 
         	else
 
-        		valor=417
+        		valor=586
 
         	fi
 
