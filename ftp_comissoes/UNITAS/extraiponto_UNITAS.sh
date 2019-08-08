@@ -70,6 +70,9 @@ while [ $n -le 360 ]; do
 		echo "Arquivos encontrados. Vou prosseguir com a execucao do script!"
 		echo ""
 
+		# Gerando links para arqond 00/12
+
+
 
 		# Gerando arq raw para rodar no GrADS
 
@@ -88,6 +91,8 @@ while [ $n -le 360 ]; do
 			LATI=`echo ${info} | awk '{print $2}'`
 			LONG=`echo ${info} | awk '{print $3}'`
 
+			rm raw_extraiponto.gs
+
 			if [ ${rodada} == "OPE" ];then
 		
 				cat ${dir_unitas}/dadosponto_UNITAS_OPE.gs > raw_extraiponto.gs
@@ -97,7 +102,6 @@ while [ $n -le 360 ]; do
 				cat ${dir_unitas}/dadosponto_UNITAS_CON.gs > raw_extraiponto.gs
 	
 			fi
-
 
 			sed -i 's/ANO/'${ANO}'/g'	raw_extraiponto.gs
 			sed -i 's/MM/'${MM}'/g'		raw_extraiponto.gs
@@ -118,20 +122,19 @@ while [ $n -le 360 ]; do
 			scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
 			scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
 
-			rm raw_extraiponto.gs
-			rm ww3.grads
-
 			# Testando se o tamanho e a data dos arquivos estao corretos
 			if [ `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -gt 1000 ] && [ `cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == `caldate ${datahoje} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]` ]; then
-				echo "Arquivos gerados corretamente. PROCESSO ENCERRADO COM SUCESSO!"
-				exit 111
+				echo "Arquivo ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt gerado corretamente. Prosseguindo... "
 			else
-				echo "Arquivos NAO foram gerados corretamente! ***VERIFICAR PROBLEMA!***"
-				exit
+				echo "Arquivo ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt NAO foi gerado corretamente! ***VERIFICAR PROBLEMA!***"
+				echo "Verificar erro!" | mail -s "Erro na geracao arquivo UNITAS ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt" felipenc2@gmail.com
+				exit 1
 			fi
 
 		done
 
+		rm ww3.grads
+		exit 00
 		#echo "Abrir o arquivo anexado e colar na tabela" | mail -s "Dados Pontos COSMO/WW3COSMO ${HH}" neris@marinha.mil.br -A meteograma_cosmo_ww3cosmo_${LATI}_${LONG}_${HH}.txt
 
 	else
@@ -144,6 +147,7 @@ while [ $n -le 360 ]; do
 
 		echo "Esperei por *** 3hrs *** mas alguns arquivos NAO foram encontrados. Vou ABORTAR script!"
 		echo ""
+		rm ww3.grads
 		exit 343
 	fi
 	n=$(( $n+1 ))
