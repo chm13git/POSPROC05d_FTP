@@ -55,7 +55,7 @@ fi
 # Verificando se as dependencias do script estao disponiveis antes de prosseguir
 arqatm="/home/operador/grads/cosmo/cosmosse22/ctl/ctl${HH}/cosmo_sse22_${HH}_M.ctl"
 arqatmz="/home/operador/grads/cosmo/cosmosse22/ctl/ctl${HH}/cosmo_sse22_${HH}_Z.ctl"
-arqond="/home/operador/grads/ww3_418/ww3icon/ww3met/work/ww3.ctl"
+arqond="/mnt/nfs/dpns32/data2/operador/mod_ondas/ww3_418/output/ww3icon/wave.${ANO}${MM}${DD}/met.t${HH}z.ctl"
 arqoce="/mnt/nfs/dpns32/data1/operador/previsao/hycom_2_2/output/Previsao_1_12/Ncdf/${ANO}${MM}${DD}/HYCOM_MV_${ANO}${MM}${DD}.nc"
 
 # Definindo caminhos
@@ -70,13 +70,10 @@ while [ $n -le 360 ]; do
 		echo "Arquivos encontrados. Vou prosseguir com a execucao do script!"
 		echo ""
 
-		# Gerando links para arqond 00/12
-
-
+		# Criando link
+		ln -sf /mnt/nfs/dpns32/data2/operador/mod_ondas/ww3_418/output/ww3icon/wave.${ANO}${MM}${DD}/met.t${HH}z.grads  ww3.grads
 
 		# Gerando arq raw para rodar no GrADS
-
-		ln -sf /home/operador/grads/ww3_418/ww3icon/ww3met/work/ww3.grads .
 
 		arq="${dir_unitas}/lista"
 		tr -d '\r' < $arq > raw.txt
@@ -123,7 +120,7 @@ while [ $n -le 360 ]; do
 			scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
 
 			# Testando se o tamanho e a data dos arquivos estao corretos
-			if [ `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -gt 1000 ] && [ `cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == `caldate ${datahoje} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]` ]; then
+			if [ `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -gt 1000 ] && [ `cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == `caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]` ]; then
 				echo "Arquivo ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt gerado corretamente. Prosseguindo... "
 			else
 				echo "Arquivo ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt NAO foi gerado corretamente! ***VERIFICAR PROBLEMA!***"
