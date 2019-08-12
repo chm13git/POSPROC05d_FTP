@@ -6,11 +6,11 @@ aaaa=ANO
 mm=MM
 dd=DD
 _hh=HH
-if (_hh=00)
+*if (_hh=00)
 _ta1=13
-else
-_ta1=1
-endif
+*else
+*_ta1=1
+*endif
 _local=LOCAL
 lati="LATI"
 long="LONG"
