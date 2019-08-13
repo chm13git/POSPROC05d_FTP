@@ -61,13 +61,16 @@ arqoce="/mnt/nfs/dpns32/data1/operador/previsao/hycom_2_2/output/Previsao_1_12/N
 # Definindo caminhos
 dir_unitas="/home/operador/ftp_comissoes/UNITAS"
 
-# Testa por 360 ciclos de 30s
+# Testa por 360 ciclos de 30s se os arq dos modelos existem e se sao do dia correto
 n=0
 while [ $n -le 360 ]; do
 
-	if [ -e "${arqatm}" ] && [ -e "${arqatmz}" ] && [ -e "${arqond}" ] && [ -e "${arqoce}" ]; then
+	if [ -e "${arqatm}" ] && [ `head -1 $arqatm | cut -d_ -f 4 | cut -c 7-8` -eq $DD ] && \
+	[ -e "${arqatmz}" ] && [ `head -1 $arqatmz | cut -d_ -f 4 | cut -c 7-8` -eq $DD ] && \
+	[ -e "${arqond}" ] && [ `head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5` -eq $DD ] && \
+	[ -e "${arqoce}" ] && [ `ncdump -h | tail -3 | head -1 | cut -d" " -f7 | cut -c 1-2`-eq $DD ]; then
 
-		echo "Arquivos encontrados. Vou prosseguir com a execucao do script!"
+		echo "Arquivos encontrados e do dia corrente. Vou prosseguir com a execucao do script!..."
 		echo ""
 
 		# Criando link
