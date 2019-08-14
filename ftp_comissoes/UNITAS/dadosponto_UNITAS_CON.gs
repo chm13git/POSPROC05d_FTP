@@ -19,7 +19,7 @@ say 'Extraindo dados lat  '%lati' long '%long
 say ''
 arqatm='/home/operador/grads/cosmo/cosmosse22/ctl/ctl'_hh'/cosmo_sse22_'_hh'_M.ctl'
 arqatmz='/home/operador/grads/cosmo/cosmosse22/ctl/ctl'_hh'/cosmo_sse22_'_hh'_Z.ctl'
-arqond='/home/operador/grads/ww3_418/ww3icon/ww3met/work/ww3.ctl'
+arqond='/mnt/nfs/dpns32/data2/operador/mod_ondas/ww3_418/output/ww3icon/wave.'%aaaa%mm%dd'/met.t'_hh'z.ctl'
 arqoce='/mnt/nfs/dpns32/data1/operador/previsao/hycom_2_2/output/Previsao_1_12/Ncdf/'%aaaa%mm%dd'/HYCOM_MV_'%aaaa%mm%dd'.nc'
 
 *################################################################################
