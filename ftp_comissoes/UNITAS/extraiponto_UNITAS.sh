@@ -120,14 +120,14 @@ while [ $n -le 360 ]; do
 
 			sed -i 's/ //g' meteograma_UNITAS_${loca}_${HH}.txt
 			mv meteograma_UNITAS_${loca}_${HH}.txt ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt
+			scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
+			scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
 
 			# Testando se o tamanho e a data dos arquivos estao corretos
 			if [ `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -gt 1000 ] && \
 			[ `cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == \
 			`caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]` ]; then
 				echo "Arquivo ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt gerado corretamente. Prosseguindo... "
-				scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
-				scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
 			else
 				echo "Arquivo ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt NAO foi gerado corretamente! ***VERIFICAR PROBLEMA!***"
 				echo "Tamanho do arq (Ref.: 1000): `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'`"
