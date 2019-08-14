@@ -37,12 +37,10 @@ DD=`echo ${datahoje} | cut -c7-8`
 if [ ${PREV} == "ope" ];then
 
 	rodada="OPE"
-	RR=12
 
 elif [ ${PREV} == "con" ];then
 
 	rodada="CON"
-	RR=24
 
 else
 
@@ -54,6 +52,7 @@ fi
 
 # Verificando se as dependencias do script estao disponiveis antes de prosseguir
 arqatm="/home/operador/grads/cosmo/cosmosse22/ctl/ctl${HH}/cosmo_sse22_${HH}_M.ctl"
+arqatm7="/home/operador/grads/cosmo/cosmomet/ctl/ctl${HH}/cosmo_met5_${HH}_M.ctl"
 arqatmz="/home/operador/grads/cosmo/cosmosse22/ctl/ctl${HH}/cosmo_sse22_${HH}_Z.ctl"
 arqond="/mnt/nfs/dpns32/data2/operador/mod_ondas/ww3_418/output/ww3icon/wave.${ANO}${MM}${DD}/met.t${HH}z.ctl"
 arqoce="/mnt/nfs/dpns32/data1/operador/previsao/hycom_2_2/output/Previsao_1_12/Ncdf/${ANO}${MM}${DD}/HYCOM_MV_${ANO}${MM}${DD}.nc"
@@ -61,6 +60,8 @@ arqoce="/mnt/nfs/dpns32/data1/operador/previsao/hycom_2_2/output/Previsao_1_12/N
 # Definindo caminhos
 dir_unitas="/home/operador/ftp_comissoes/UNITAS"
 
+#####################################################################################
+# Gera S3_UNITAS TXT
 # Testa por 360 ciclos de 30s se os arq dos modelos existem e se sao do dia correto
 n=0
 while [ $n -le 360 ]; do
@@ -96,10 +97,12 @@ while [ $n -le 360 ]; do
 			if [ ${rodada} == "OPE" ];then
 		
 				cat ${dir_unitas}/dadosponto_UNITAS_OPE.gs > raw_extraiponto.gs
+				RR=12
 
 			else
 
 				cat ${dir_unitas}/dadosponto_UNITAS_CON.gs > raw_extraiponto.gs
+				RR=24
 	
 			fi
 
@@ -112,31 +115,33 @@ while [ $n -le 360 ]; do
 			sed -i 's/LONG/'${LONG}'/g'	raw_extraiponto.gs
 			sed -i 's/RODA/'${rodada}'/g'	raw_extraiponto.gs
 
-			cat raw_extraiponto.gs
-
 			# Roda o script que gera o txt
 			opengrads -bpc raw_extraiponto.gs
 
 			sed -i 's/ //g' meteograma_UNITAS_${loca}_${HH}.txt
 			mv meteograma_UNITAS_${loca}_${HH}.txt ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt
-			scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
-			scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
 
 			# Testando se o tamanho e a data dos arquivos estao corretos
-			if [ `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -gt 1000 ] && [ `cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == `caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]` ]; then
+			if [ `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -gt 1000 ] && \
+			[ `cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == \
+			`caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]` ]; then
 				echo "Arquivo ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt gerado corretamente. Prosseguindo... "
+				scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
+				scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
 			else
 				echo "Arquivo ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt NAO foi gerado corretamente! ***VERIFICAR PROBLEMA!***"
 				echo "Tamanho do arq (Ref.: 1000): `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'`"
-				echo "Horario do arq (Ref.: `caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]`): `cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","`"
-				echo "Verificar erro!" | mail -s "Erro na geracao arquivo UNITAS ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt" felipenc2@gmail.com
-				exit 1
+				echo "Horario do arq (Ref.: `caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]`): \
+					`cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","`"
+				echo "Verificar erro!" | mail -s "Erro na geracao arquivo UNITAS ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt" \
+					felipenc2@gmail.com
+				exit 11
 			fi
 
 		done
 
 		rm ww3.grads
-		exit 00
+		exit 000
 		#echo "Abrir o arquivo anexado e colar na tabela" | mail -s "Dados Pontos COSMO/WW3COSMO ${HH}" neris@marinha.mil.br -A meteograma_cosmo_ww3cosmo_${LATI}_${LONG}_${HH}.txt
 
 	else
@@ -150,7 +155,7 @@ while [ $n -le 360 ]; do
 		echo "Esperei por *** 3hrs *** mas alguns arquivos NAO foram encontrados. Vou ABORTAR script!"
 		echo ""
 		rm ww3.grads
-		exit 343
+		exit 111
 	fi
 	n=$(( $n+1 ))
 done
