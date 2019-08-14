@@ -203,7 +203,7 @@ dirbackup="/home/operador/backup_produtos_modelagem/$ano/$mes/$data/ww3_418/ww3g
 
 	echo "O Backup dos Produtos de Modelagem foi realizado com sucesso ${data}${HH}Z feito com sucesso" 
  	
-	echo | Mail -s 'O Backup dos Produtos de Modelagem foi realizado com sucesso ${data}${HH}Z' alana.lima.pontes@gmail.com, luz.priscila@gmail.com, supervisor@smm.mil.br
+	echo | Mail -s 'O Backup dos Produtos de Modelagem foi realizado com sucesso ${data}${HH}Z' alana@smm.mil.br, priscila.luz@smm.mil.br, supervisor@smm.mil.br
       
 	MSG="Backup dos Produtos de Modelagem $data ${HH} feito com sucesso"
 	/usr/bin/input_status.php BACKUP_PRODUTOS $HH OPERACIONAL VERDE "$MSG"
