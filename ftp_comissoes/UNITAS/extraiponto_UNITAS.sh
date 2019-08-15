@@ -71,6 +71,7 @@ while [ $n -le 360 ]; do
 
 		echo "Arquivos ${arqatm7} e ${arqond} encontrados e do dia corrente. Vou prosseguir com a execucao do script!..."
 		echo ""
+		sleep 120
 
 		# Criando link
 		ln -sf /mnt/nfs/dpns32/data2/operador/mod_ondas/ww3_418/output/ww3icon/wave.${ANO}${MM}${DD}/met.t${HH}z.grads  ww3.grads
@@ -136,7 +137,6 @@ while [ $n -le 360 ]; do
 					`cat ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","`"
 				echo "Verificar erro!" | mail -s "Erro na geracao arquivo UNITAS ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt" \
 					felipenc2@gmail.com
-				break
 
 			fi
 
@@ -147,12 +147,12 @@ while [ $n -le 360 ]; do
 		#echo "Abrir o arquivo anexado e colar na tabela" | mail -s "Dados Pontos COSMO/WW3COSMO ${HH}" neris@marinha.mil.br -A meteograma_cosmo_ww3cosmo_${LATI}_${LONG}_${HH}.txt
 
 	else
-		if [ `head -1 $arqatm7 | cut -d_ -f 4 | cut -c 7-8` = $DD ]; then
+		if [ `head -1 $arqatm7 | cut -d_ -f 4 | cut -c 7-8` != $DD ]; then
 			
 			echo "Arquivo $arqatm7 NAO foi gerado corretamente (`head -1 $arqatm7 | cut -d_ -f 4 | cut -c 7-8`). Vou aguardar 30s..."
 			echo ""
 
-		elif [ `head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5` = $DD ]; then
+		elif [ `head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5` != $DD ]; then
 
 			echo "Arquivo $arqond NAO foi gerado corretamente (`head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5`). Vou aguardar 30s..."
 			echo ""
@@ -186,6 +186,7 @@ while [ $n -le 360 ]; do
 
 		echo "Arquivos encontrados e do dia corrente. Vou prosseguir com a execucao do script!..."
 		echo ""
+		sleep 120
 
 		# Criando link
 		ln -sf /mnt/nfs/dpns32/data2/operador/mod_ondas/ww3_418/output/ww3icon/wave.${ANO}${MM}${DD}/met.t${HH}z.grads  ww3.grads
@@ -233,14 +234,14 @@ while [ $n -le 360 ]; do
 
 			sed -i 's/ //g' meteograma_UNITAS_${loca}_${HH}.txt
 			mv meteograma_UNITAS_${loca}_${HH}.txt ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt
-			scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
-			scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
 
 			# Testando se o tamanho e a data dos arquivos estao corretos
 			if [ `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -gt 1000 ] && \
 			[ `cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == \
 			`caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]` ]; then
 				echo "Arquivo ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt gerado corretamente. Prosseguindo... "
+				scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
+				scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
 			else
 				echo "Arquivo ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt NAO foi gerado corretamente! ***VERIFICAR PROBLEMA!***"
 				echo "Tamanho do arq (Ref.: 1000): `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'`"
@@ -248,6 +249,7 @@ while [ $n -le 360 ]; do
 					`cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","`"
 				echo "Verificar erro!" | mail -s "Erro na geracao arquivo UNITAS ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt" \
 					felipenc2@gmail.com
+				rm ww3.grads
 				exit 1
 			fi
 
@@ -258,22 +260,22 @@ while [ $n -le 360 ]; do
 		#echo "Abrir o arquivo anexado e colar na tabela" | mail -s "Dados Pontos COSMO/WW3COSMO ${HH}" neris@marinha.mil.br -A meteograma_cosmo_ww3cosmo_${LATI}_${LONG}_${HH}.txt
 
 	else
-		if [ `head -1 $arqatm | cut -d_ -f 4 | cut -c 7-8` = $DD ]; then
+		if [ `head -1 $arqatm | cut -d_ -f 4 | cut -c 7-8` != $DD ]; then
 
 			echo "Arquivo $arqatm NAO foi gerado corretamente (`head -1 $arqatm | cut -d_ -f 4 | cut -c 7-8`). Vou aguardar 30s..."
 			echo ""
 
-		elif [ `head -1 $arqatmz | cut -d_ -f 4 | cut -c 7-8` = $DD ]; then
+		elif [ `head -1 $arqatmz | cut -d_ -f 4 | cut -c 7-8` != $DD ]; then
 
 			echo "Arquivo $arqatmz NAO foi gerado corretamente (`head -1 $arqatmz | cut -d_ -f 4 | cut -c 7-8`). Vou aguardar 30s..."
 			echo ""
 
-		elif [ `head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5` = $DD ]; then
+		elif [ `head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5` != $DD ]; then
 
 			echo "Arquivo $arqond NAO foi gerado corretamente (`head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5`). Vou aguardar 30s..."
 			echo ""
 
-		elif [ `head -9 $arqoce | tail -1 | cut -d: -f 2 | cut -c 4-5` = $DD ]; then
+		elif [ `/home/operador/local/bin/ncdump -h $arqoce| tail -3 | head -1 | cut -d" " -f7 | cut -c 1-2` != $DD ]; then
 
 			echo "Arquivo $arqoce NAO foi gerado corretamente (`head -9 $arqoce | tail -1 | cut -d: -f 2 | cut -c 4-5`). Vou aguardar 30s..."
 			echo ""
