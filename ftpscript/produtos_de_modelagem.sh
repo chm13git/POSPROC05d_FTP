@@ -166,7 +166,6 @@ dirbackup_ondo="/home/operador/backup_produtos_modelagem/$ano/$mes/$data/ww3_418
 	echo "FAZENDO BACKUP DO WW3 SSE (COSMO) "
 
 mkdir -p /home/operador/backup_produtos_modelagem/$ano/$mes/$data/ww3_418/ww3cosmo/ww3sse${HH}
-#mkdir -p /home/operador/backup_produtos_modelagem/$ano/$mes/$data/ww3_418/ww3cosmo/ondogramas${HH}
 dirgif="/home/operador/grads/gif/ww3_418/ww3cosmo/ww3sse${HH}"
 dirbackup="/home/operador/backup_produtos_modelagem/$ano/$mes/$data/ww3_418/ww3cosmo/ww3sse${HH}"
 #dirgif_ondo="/home/operador/ondogramas/ww3_418/ww3cosmo/ww3met${HH}"
@@ -197,12 +196,33 @@ dirbackup="/home/operador/backup_produtos_modelagem/$ano/$mes/$data/ww3_418/ww3g
 	cp -p ${dirgif}/periopeak_*.gif ${dirbackup}
 	cp -p ${dirgif}/periondas_*.gif ${dirbackup}
 
-	echo "FAZENDO BACKUP DOS PRODUTOS DE MODELAGEM NA DPNS32"
 
+        echo "FAZENDO BACKUP DO HYCOM 112"
+
+mkdir -p /home/operador/backup_produtos_modelagem/$ano/$mes/$data/hycom/hycom112
+dirgif="/home/operador/grads/gif/hycom${HH}/hycom112/animacao"
+dirbackup="/home/operador/backup_produtos_modelagem/$ano/$mes/$data/hycom/hycom112"
+
+        cp -p ${dirgif}/*.png ${dirbackup}
+	
+	echo "FAZENDO BACKUP DO HYCOM 124"
+
+mkdir -p /home/operador/backup_produtos_modelagem/$ano/$mes/$data/hycom/hycom124
+dirgif="/home/operador/grads/gif/hycom${HH}/hycom124/animacao"
+dirbackup="/home/operador/backup_produtos_modelagem/$ano/$mes/$data/hycom/hycom124"
+
+        cp -p ${dirgif}/*.png ${dirbackup}
+
+   echo "FAZENDO COPIA DOS DADOS PARA AS MAQUINAS DO P1 E P2"
+
+dirbackup="/home/operador/backup_produtos_modelagem/$ano/$mes/$data"
+	scp -r $dirbackup previsor@10.12.101.2:/stratus/BPME-SAR/$ano/$mes/$data
+	scp -r $dirbackup previsor@10.12.70.75:/home/previsor/stratus/BPME-SAR/$ano/$mes/$data
+
+	echo "FAZENDO BACKUP DOS PRODUTOS DE MODELAGEM NA DPNS32"
 	rsync  -auzp /home/operador/backup_produtos_modelagem/ admbackup@10.13.100.32:/home/admbackup/backup_supervisor
 
 	echo "O Backup dos Produtos de Modelagem foi realizado com sucesso ${data}${HH}Z feito com sucesso" 
- 	
 	echo | Mail -s 'O Backup dos Produtos de Modelagem foi realizado com sucesso ${data}${HH}Z' alana@smm.mil.br, priscila.luz@smm.mil.br, supervisor@smm.mil.br
       
 	MSG="Backup dos Produtos de Modelagem $data ${HH} feito com sucesso"
