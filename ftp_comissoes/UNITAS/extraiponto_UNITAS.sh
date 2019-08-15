@@ -153,15 +153,15 @@ while [ $n -le 360 ]; do
 			
 			echo "Arquivo $arqatm7 NAO foi gerado corretamente (`head -1 $arqatm7 | cut -d_ -f 4 | cut -c 7-8`). Vou aguardar 30s..."
 			echo ""
-			sleep 30
 
 		elif [ `head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5` = $DD ]; then
 
 			echo "Arquivo $arqond NAO foi gerado corretamente (`head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5`). Vou aguardar 30s..."
 			echo ""
-			sleep 30
 
 		fi
+
+		sleep 30
 
 	fi
 
@@ -266,27 +266,25 @@ while [ $n -le 360 ]; do
 
 			echo "Arquivo $arqatm NAO foi gerado corretamente (`head -1 $arqatm | cut -d_ -f 4 | cut -c 7-8`). Vou aguardar 30s..."
 			echo ""
-			sleep 30
 
 		elif [ `head -1 $arqatmz | cut -d_ -f 4 | cut -c 7-8` = $DD ]; then
 
 			echo "Arquivo $arqatmz NAO foi gerado corretamente (`head -1 $arqatmz | cut -d_ -f 4 | cut -c 7-8`). Vou aguardar 30s..."
 			echo ""
-			sleep 30
 
 		elif [ `head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5` = $DD ]; then
 
 			echo "Arquivo $arqond NAO foi gerado corretamente (`head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5`). Vou aguardar 30s..."
 			echo ""
-			sleep 30
 
 		elif [ `head -9 $arqoce | tail -1 | cut -d: -f 2 | cut -c 4-5` = $DD ]; then
 
 			echo "Arquivo $arqoce NAO foi gerado corretamente (`head -9 $arqoce | tail -1 | cut -d: -f 2 | cut -c 4-5`). Vou aguardar 30s..."
 			echo ""
-			sleep 30
 
                 fi
+			
+		sleep 30
 
 	fi
 
