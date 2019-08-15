@@ -116,7 +116,7 @@ while [ $n -le 360 ]; do
 			cat raw_extraiponto.gs
 
 			# Roda o script que gera o txt
-			opengrads -bpc raw_extraiponto.gs
+			/opt/opengrads/Contents/opengrads -bpc raw_extraiponto.gs
 
 			sed -i 's/ //g' meteograma_UNITAS_${loca}_${HH}.txt
 			mv meteograma_UNITAS_${loca}_${HH}.txt ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt
@@ -181,10 +181,10 @@ done
 n=0
 while [ $n -le 360 ]; do
 
-	if [ -e "${arqatm}" ] && [ `head -1 $arqatm | cut -d_ -f 4 | cut -c 7-8` = $DD ] && \
-	[ -e "${arqatmz}" ] && [ `head -1 $arqatmz | cut -d_ -f 4 | cut -c 7-8` = $DD ] && \
-	[ -e "${arqond}" ] && [ `head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5` = $DD ] && \
-	[ -e "${arqoce}" ] && [ `ncdump -h $arqoce| tail -3 | head -1 | cut -d" " -f7 | cut -c 1-2` = $DD ]; then
+	if [ `head -1 $arqatm | cut -d_ -f 4 | cut -c 7-8` = $DD ] && \
+	[ `head -1 $arqatmz | cut -d_ -f 4 | cut -c 7-8` = $DD ] && \
+	[ `head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5` = $DD ] && \
+	[ `/home/operador/local/bin/ncdump -h $arqoce| tail -3 | head -1 | cut -d" " -f7 | cut -c 1-2` = $DD ]; then
 
 		echo "Arquivos encontrados e do dia corrente. Vou prosseguir com a execucao do script!..."
 		echo ""
@@ -233,7 +233,7 @@ while [ $n -le 360 ]; do
 			cat raw_extraiponto.gs
 
 			# Roda o script que gera o txt
-			opengrads -bpc raw_extraiponto.gs
+			/opt/opengrads/Contents/opengrads -bpc raw_extraiponto.gs
 
 			sed -i 's/ //g' meteograma_UNITAS_${loca}_${HH}.txt
 			mv meteograma_UNITAS_${loca}_${HH}.txt ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt
