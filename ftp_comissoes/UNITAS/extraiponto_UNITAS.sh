@@ -95,12 +95,12 @@ while [ $n -le 360 ]; do
 			if [ ${rodada} == "OPE" ];then
 		
 				cat ${dir_unitas}/dadosponto7km_UNITAS_OPE.gs > raw_extraiponto.gs
-				RR=36
+				RR=48
 
 			else
 
 				cat ${dir_unitas}/dadosponto7km_UNITAS_CON.gs > raw_extraiponto.gs
-				RR=48
+				RR=60
 	
 			fi
 
@@ -113,13 +113,11 @@ while [ $n -le 360 ]; do
 			sed -i 's/LONG/'${LONG}'/g'	raw_extraiponto.gs
 			sed -i 's/RODA/'${rodada}'/g'	raw_extraiponto.gs
 
-			cat raw_extraiponto.gs
-
 			# Roda o script que gera o txt
 			/opt/opengrads/Contents/opengrads -bpc raw_extraiponto.gs
 
-			sed -i 's/ //g' meteograma_UNITAS_${loca}_${HH}.txt
-			mv meteograma_UNITAS_${loca}_${HH}.txt ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt
+			sed -i 's/ //g' S4_UNITAS_${loca}_${HH}.txt
+			mv S4_UNITAS_${loca}_${HH}.txt ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt
 
 			# Testando se o tamanho e a data dos arquivos estao corretos
 			if [ `ls -l ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -ge 200 ] && \
@@ -127,8 +125,8 @@ while [ $n -le 360 ]; do
 			`caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]` ]; then
 				
 				echo "Arquivo ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt gerado corretamente. Prosseguindo... "
-				#scp ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
-				#scp ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
+				scp ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
+				scp ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
 			
 			else
 
@@ -138,7 +136,7 @@ while [ $n -le 360 ]; do
 					`cat ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","`"
 				echo "Verificar erro!" | mail -s "Erro na geracao arquivo UNITAS ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt" \
 					felipenc2@gmail.com
-				exit 1
+				break
 
 			fi
 
@@ -229,8 +227,6 @@ while [ $n -le 360 ]; do
 			sed -i 's/LATI/'${LATI}'/g'	raw_extraiponto.gs
 			sed -i 's/LONG/'${LONG}'/g'	raw_extraiponto.gs
 			sed -i 's/RODA/'${rodada}'/g'	raw_extraiponto.gs
-
-			cat raw_extraiponto.gs
 
 			# Roda o script que gera o txt
 			/opt/opengrads/Contents/opengrads -bpc raw_extraiponto.gs
