@@ -186,7 +186,7 @@ while [ $n -le 360 ]; do
 
 		echo "Arquivos encontrados e do dia corrente. Vou prosseguir com a execucao do script!..."
 		echo ""
-		sleep 120
+		sleep 600
 
 		# Criando link
 		ln -sf /mnt/nfs/dpns32/data2/operador/mod_ondas/ww3_418/output/ww3icon/wave.${ANO}${MM}${DD}/met.t${HH}z.grads  ww3.grads
@@ -236,7 +236,7 @@ while [ $n -le 360 ]; do
 			mv meteograma_UNITAS_${loca}_${HH}.txt ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt
 
 			# Testando se o tamanho e a data dos arquivos estao corretos
-			if [ `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -gt 1000 ] && \
+			if [ `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -gt 900 ] && \
 			[ `cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == \
 			`caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]` ]; then
 				echo "Arquivo ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt gerado corretamente. Prosseguindo... "
@@ -244,7 +244,7 @@ while [ $n -le 360 ]; do
 				scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
 			else
 				echo "Arquivo ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt NAO foi gerado corretamente! ***VERIFICAR PROBLEMA!***"
-				echo "Tamanho do arq (Ref.: 1000): `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'`"
+				echo "Tamanho do arq (Ref.: 900): `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'`"
 				echo "Horario do arq (Ref.: `caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]`): \
 					`cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","`"
 				echo "Verificar erro!" | mail -s "Erro na geracao arquivo UNITAS ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt" \
