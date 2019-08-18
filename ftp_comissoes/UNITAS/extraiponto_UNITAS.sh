@@ -6,7 +6,15 @@
 # Utilidade: Extrair dados de um ponto do modelo atm/ondas num arq .txt
 #
 # Dependencias:
-# 1- Arquivos .ctl c/ caminho completo (vide raw_extraiponto.gs);
+# 1- Arquivos:
+# arqatm=/home/operador/grads/cosmo/cosmosse22/ctl/ctl00/cosmo_sse22_00_M.ctl
+# arqatm7=/home/operador/grads/cosmo/cosmomet/ctl/ctl00/cosmo_met5_00_M.ctl
+# arqatmz=/home/operador/grads/cosmo/cosmosse22/ctl/ctl00/cosmo_sse22_00_Z.ctl
+# arqond=/mnt/nfs/dpns32/data2/operador/mod_ondas/ww3_418/output/ww3icon/wave.20190816/met.t00z.ctl
+# arqoce=/mnt/nfs/dpns32/data1/operador/previsao/hycom_2_2/output/Previsao_1_12/Ncdf/20190816/HYCOM_MV_20190816.nc
+# (Na duvida, vide raw_extraiponto.gs)
+#
+# 2- Lista com pontos (vide arquivo lista)
 #
 # Saida:
 # 1- Arquivo meteograma_cosmo_ww3cosmo_${LATI}_${LONG}_${HH}.txt
@@ -118,24 +126,24 @@ while [ $n -le 360 ]; do
 			/opt/opengrads/Contents/opengrads -bpc raw_extraiponto.gs
 
 			sed -i 's/ //g' S4_UNITAS_${loca}_${HH}.txt
-			mv S4_UNITAS_${loca}_${HH}.txt ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt
+			mv S4_UNITAS_${loca}_${HH}.txt ${dir_unitas}/${rodada}/S4_UNITAS_${loca}_${HH}_${rodada}.txt
 
 			# Testando se o tamanho e a data dos arquivos estao corretos
-			if [ `ls -l ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -ge 200 ] && \
-			[ `cat ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == \
+			if [ `ls -l ${dir_unitas}/${rodada}/S4_UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -ge 200 ] && \
+			[ `cat ${dir_unitas}/${rodada}/S4_UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == \
 			`caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]` ]; then
 				
-				echo "Arquivo ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt gerado corretamente. Prosseguindo... "
-				scp ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
-				scp ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
+				echo "Arquivo ${dir_unitas}/${rodada}/S4_UNITAS_${loca}_${HH}_${rodada}.txt gerado corretamente. Prosseguindo... "
+				scp ${dir_unitas}/${rodada}/S4_UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
+				scp ${dir_unitas}/${rodada}/S4_UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
 			
 			else
 
-				echo "Arquivo ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt NAO foi gerado corretamente! ***VERIFICAR PROBLEMA!***"
-				echo "Tamanho do arq (Ref.: 200): `ls -l ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'`"
+				echo "Arquivo ${dir_unitas}/${rodada}/S4_UNITAS_${loca}_${HH}_${rodada}.txt NAO foi gerado corretamente! ***VERIFICAR PROBLEMA!***"
+				echo "Tamanho do arq (Ref.: 200): `ls -l ${dir_unitas}/${rodada}/S4_UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'`"
 				echo "Horario do arq (Ref.: `caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]`): \
-					`cat ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","`"
-				echo "Verificar erro!" | mail -s "Erro na geracao arquivo UNITAS ${dir_unitas}/S4_UNITAS_${loca}_${HH}_${rodada}.txt" \
+					`cat ${dir_unitas}/${rodada}/S4_UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","`"
+				echo "Verificar erro!" | mail -s "Erro na geracao arquivo UNITAS ${dir_unitas}/${rodada}/S4_UNITAS_${loca}_${HH}_${rodada}.txt" \
 					felipenc2@gmail.com
 
 			fi
@@ -182,11 +190,12 @@ while [ $n -le 360 ]; do
 	if [ `head -1 $arqatm | cut -d_ -f 4 | cut -c 7-8` = $DD ] && \
 	[ `head -1 $arqatmz | cut -d_ -f 4 | cut -c 7-8` = $DD ] && \
 	[ `head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5` = $DD ] && \
-	[ `/home/operador/local/bin/ncdump -h $arqoce| tail -3 | head -1 | cut -d" " -f7 | cut -c 1-2` = $DD ]; then
+	[ `/home/operador/local/bin/ncdump -h $arqoce | tail -3 | head -1 | cut -d" " -f7 | cut -c 1-2` = $DD ] && \
+	[ `/home/operador/local/bin/ncdump -h $arqoce | grep 'TIME = UNLIMITED' | cut -d"(" -f2 | cut -c 1-2` = 16 ]; then
 
 		echo "Arquivos encontrados e do dia corrente. Vou prosseguir com a execucao do script!..."
 		echo ""
-		sleep 600
+		sleep 120
 
 		# Criando link
 		ln -sf /mnt/nfs/dpns32/data2/operador/mod_ondas/ww3_418/output/ww3icon/wave.${ANO}${MM}${DD}/met.t${HH}z.grads  ww3.grads
@@ -233,21 +242,21 @@ while [ $n -le 360 ]; do
 			/opt/opengrads/Contents/opengrads -bpc raw_extraiponto.gs
 
 			sed -i 's/ //g' meteograma_UNITAS_${loca}_${HH}.txt
-			mv meteograma_UNITAS_${loca}_${HH}.txt ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt
+			mv meteograma_UNITAS_${loca}_${HH}.txt ${dir_unitas}/${rodada}/UNITAS_${loca}_${HH}_${rodada}.txt
 
 			# Testando se o tamanho e a data dos arquivos estao corretos
-			if [ `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -gt 900 ] && \
-			[ `cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == \
+			if [ `ls -l ${dir_unitas}/${rodada}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'` -gt 900 ] && \
+			[ `cat ${dir_unitas}/${rodada}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == \
 			`caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]` ]; then
-				echo "Arquivo ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt gerado corretamente. Prosseguindo... "
-				scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
-				scp ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
+				echo "Arquivo ${dir_unitas}/${rodada}/UNITAS_${loca}_${HH}_${rodada}.txt gerado corretamente. Prosseguindo... "
+				scp ${dir_unitas}/${rodada}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.101.2:/home/previsor/UNITAS/
+				scp ${dir_unitas}/${rodada}/UNITAS_${loca}_${HH}_${rodada}.txt previsor@10.12.70.75:/home/previsor/UNITAS/
 			else
-				echo "Arquivo ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt NAO foi gerado corretamente! ***VERIFICAR PROBLEMA!***"
-				echo "Tamanho do arq (Ref.: 900): `ls -l ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'`"
+				echo "Arquivo ${dir_unitas}/${rodada}/UNITAS_${loca}_${HH}_${rodada}.txt NAO foi gerado corretamente! ***VERIFICAR PROBLEMA!***"
+				echo "Tamanho do arq (Ref.: 900): `ls -l ${dir_unitas}/${rodada}/UNITAS_${loca}_${HH}_${rodada}.txt | awk '{ print $5 }'`"
 				echo "Horario do arq (Ref.: `caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]`): \
-					`cat ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","`"
-				echo "Verificar erro!" | mail -s "Erro na geracao arquivo UNITAS ${dir_unitas}/UNITAS_${loca}_${HH}_${rodada}.txt" \
+					`cat ${dir_unitas}/${rodada}/UNITAS_${loca}_${HH}_${rodada}.txt | head -1 | cut -f4 -d","`"
+				echo "Verificar erro!" | mail -s "Erro na geracao arquivo UNITAS ${dir_unitas}/${rodada}/UNITAS_${loca}_${HH}_${rodada}.txt" \
 					felipenc2@gmail.com
 				rm ww3.grads
 				exit 1
@@ -275,9 +284,11 @@ while [ $n -le 360 ]; do
 			echo "Arquivo $arqond NAO foi gerado corretamente (`head -9 $arqond | tail -1 | cut -d: -f 2 | cut -c 4-5`). Vou aguardar 30s..."
 			echo ""
 
-		elif [ `/home/operador/local/bin/ncdump -h $arqoce| tail -3 | head -1 | cut -d" " -f7 | cut -c 1-2` != $DD ]; then
+		elif [ `/home/operador/local/bin/ncdump -h $arqoce| tail -3 | head -1 | cut -d" " -f7 | cut -c 1-2` != $DD ] && \
+		[ `/home/operador/local/bin/ncdump -h $arqoce | grep 'TIME = UNLIMITED' | cut -d"(" -f2 | cut -c 1-2` = 16 ]; then
 
-			echo "Arquivo $arqoce NAO foi gerado corretamente (`head -9 $arqoce | tail -1 | cut -d: -f 2 | cut -c 4-5`). Vou aguardar 30s..."
+			echo "Arquivo $arqoce NAO foi gerado corretamente (`head -9 $arqoce | tail -1 | cut -d: -f 2 | cut -c 4-5`\
+			/`/home/operador/local/bin/ncdump -h $arqoce | grep 'TIME = UNLIMITED' | cut -d"(" -f2 | cut -c 1-2`). Vou aguardar 30s..."
 			echo ""
 
                 fi
