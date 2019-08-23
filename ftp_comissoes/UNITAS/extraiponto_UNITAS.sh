@@ -79,7 +79,7 @@ while [ $n -le 360 ]; do
 
 		echo "Arquivos ${arqatm7} e ${arqond} encontrados e do dia corrente. Vou prosseguir com a execucao do script para S4!..."
 		echo ""
-		#sleep 120
+		sleep 120
 
 		# Criando link
 		ln -sf /mnt/nfs/dpns32/data2/operador/mod_ondas/ww3_418/output/ww3icon/wave.${ANO}${MM}${DD}/met.t${HH}z.grads  ww3.grads
@@ -179,7 +179,7 @@ while [ $n -le 360 ]; do
 
 			echo "Arquivos encontrados e do dia corrente. Vou prosseguir com a execucao do script para S3!..."
 			echo ""
-			#sleep 120
+			sleep 120
 
 			# Criando link
 			ln -sf /mnt/nfs/dpns32/data2/operador/mod_ondas/ww3_418/output/ww3icon/wave.${ANO}${MM}${DD}/met.t${HH}z.grads  ww3.grads
@@ -215,7 +215,7 @@ while [ $n -le 360 ]; do
 
 				# Testando se último ponto foi gerado corretamente para antes de iniciar
 				if [ `ls -l ${dir_unitas}/${rodada}/UNITAS_303_${HH}_${rodada}.txt | awk '{ print $5 }'` -ge 900 ] && \
-				[ `cat ${dir_unitas}/${rodada}/S4_UNITAS_303_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == \
+				[ `cat ${dir_unitas}/${rodada}/UNITAS_303_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == \
 				`caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]` ]; then
 
 					echo "Arquivo ${dir_unitas}/${rodada}/UNITAS_303_${HH}_${rodada}.txt SAFO!"
@@ -324,7 +324,7 @@ while [ $n -le 360 ]; do
 
 			echo "Arquivos encontrados e do dia corrente. Vou prosseguir com a execucao do script para S3!..."
 			echo ""
-			#sleep 120
+			sleep 120
 
 			# Criando link
 			ln -sf /mnt/nfs/dpns32/data2/operador/mod_ondas/ww3_418/output/ww3icon/wave.${ANO}${MM}${DD}/met.t${HH}z.grads  ww3.grads
@@ -360,7 +360,7 @@ while [ $n -le 360 ]; do
 
 				# Testando se último ponto foi gerado corretamente para antes de iniciar
 				if [ `ls -l ${dir_unitas}/${rodada}/UNITAS_303_${HH}_${rodada}.txt | awk '{ print $5 }'` -ge 900 ] && \
-				[ `cat ${dir_unitas}/${rodada}/S4_UNITAS_303_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == \
+				[ `cat ${dir_unitas}/${rodada}/UNITAS_303_${HH}_${rodada}.txt | head -1 | cut -f4 -d","` == \
 				`caldate ${datahoje}${HH} + ${RR}h 'hhZddMMMyyyy' | tr [a-z] [A-Z]` ]; then
 
 					echo "Arquivo ${dir_unitas}/${rodada}/UNITAS_303_${HH}_${rodada}.txt SAFO!"
