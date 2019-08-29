@@ -28,7 +28,7 @@ datai = data.strftime('%Y%m%d')
 # Delimitando a área de interesse
 lat_sul = '-30'   # latitude mais ao sul do recorte desejado
 lat_norte = '-5' # latitude mais ao norte do recorte desejado
-lon_oeste = '-44'   # longitude mais à oeste do recorte desejado
+lon_oeste = '-45'   # longitude mais à oeste do recorte desejado
 lon_leste = '-18'   # longitude mais à leste do recorte desejado
 
 import numpy as np
@@ -142,23 +142,23 @@ for ii in range(0,int(prog),3):
     m=Basemap(projection='merc',llcrnrlat=float(lat_sul),urcrnrlat=float(lat_norte),llcrnrlon=float(lon_oeste),urcrnrlon=float    (lon_leste),resolution='h')
     x,y=m(*np.meshgrid(lon,lat))
     dado=pt[ii,:,:]
-    CS=m.contourf(x,y,dado,levels=[0,6.5,8,11],colors=['mediumseagreen','yellow','tomato'])
+    CS=m.contourf(x,y,dado,levels=[0,6.49,7.99,11],colors=['mediumseagreen','yellow','tomato'])
     m.drawcoastlines()
     m.fillcontinents(color='white',lake_color='aqua')
     m.drawparallels(np.arange(float(lat_sul),float(lat_norte),5), linewidth=0.3, labels=[1,0,0,0],fmt='%g')
     m.drawmeridians(np.arange(float(lon_oeste),float(lon_leste),5), linewidth=0.3, labels=[0,0,0,1])
     m.drawcountries(linewidth=0.8, color='k', antialiased=1, ax=None, zorder=None)
-    m.readshapefile('/home/operador/grads/auxilio_decisao/scripts/shapefiles/BRA_adm1','BRA_adm1',linewidth=0.50,color='navy')
-    m.readshapefile('/home/operador/grads/auxilio_decisao/scripts/shapefiles/ne_10m_admin_0_countries','ne_10m_admin_0_countries',linewidth=0.50,color='navy')
-    m.readshapefile('/home/operador/grads/auxilio_decisao/scripts/shapefiles/Metareas','Metareas',linewidth=0.50,color='navy')
+    m.readshapefile('/home/operador/grads/auxilio_decisao/scripts/shapefiles/BRA_adm1','BRA_adm1',linewidth=0.50,color='dimgray')
+    m.readshapefile('/home/operador/grads/auxilio_decisao/scripts/shapefiles/ne_10m_admin_0_countries','ne_10m_admin_0_countries',linewidth=0.50,color='dimgray')
+    m.readshapefile('/home/operador/grads/auxilio_decisao/scripts/shapefiles/Metareas','Metareas',linewidth=0.50,color='dimgray')
     plt.hold(True)
     tit=str(tit_tempo[iii])
     iii=iii+1
     plt.suptitle('Auxílio à Navegação - Comando do 2oDN \n'+data_s+' '+tit+'Z', fontsize=11)
     cbar=plt.colorbar(CS, format='%.1f', orientation='horizontal', pad=0.1, shrink=0.3)
-    cbar.ax.set_xlabel('Navegabilidade')
+    cbar.ax.set_xlabel('Categoria de Risco')
 #    plt.table(cellText = [['0 a 6.49', '6.5 a 7.9', '8 a 11']], cellLoc='center', loc ='bottom', cellColours = [['mediumseagreen','yellow','tomato']], fontsize=8)
 #    plt.figtext(0.3, 0.0, 'Área hachurada em Verde: Pontuação abaixo de 6.5 \n Área hachurada em Amarelo: Pontuação entre 6.5 e 7.9 \n Área hachurada em Vermelho: Pontuação acima de 8', va='baseline', fontsize=8)
-    plt.savefig('/home/operador/grads/gif/ww3_418/ww3'+mod+'/auxilionovo/auxilio2odn_'+data_s+'_'+tit+'.png')
+    plt.savefig('/home/operador/grads/gif/ww3_418/ww3'+mod+'/auxilionovo/auxilio2odn_'+data_s+'_'+tit+'.png', bbox_inches='tight', pad_inches=0.2, dpi=200)
 
 quit()
