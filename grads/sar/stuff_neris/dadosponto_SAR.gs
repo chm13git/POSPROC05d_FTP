@@ -136,6 +136,8 @@ return
 * Fim da funcao TEMPO
 *################################################################################
 
+*=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
+
 *################################################################################
 * Inicio da funcao TEMP2M
 *################################################################################
@@ -203,6 +205,8 @@ return
 *################################################################################
 * Fim da funcao TEMP2M
 *################################################################################
+
+*=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
 *################################################################################
 * Inicio da funcao VENTO 10m (dir e int)
@@ -312,6 +316,8 @@ return
 * Fim da funcao VENTO 10m (dir e int)
 *################################################################################
 
+*=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
+
 *################################################################################
 * Fim da funcao ONDAS (hs e dp)
 *################################################################################
@@ -393,6 +399,8 @@ return
 * Fim da funcao ONDAS (hs e dp)
 *################################################################################
 
+*=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
+
 *################################################################################
 * Inicio da funcao TSM
 *################################################################################
@@ -412,7 +420,7 @@ lon1=subwrd(args,2)
 
 ta=_ti
 
-correntes=' '
+tsms=' '
 while(ta<=_tf)
 
 if(ta=_ti)
@@ -423,37 +431,39 @@ tempt=subwrd(result,3)
 tempo=tempt
 
 'd temperature'
-corrente=subwrd(result,4)
-corrente=math_format('%2.1f',corrente)
-correntes=corrente
+tsm=subwrd(result,4)
+tsm=math_format('%2.1f',tsm)
+tsms=tsm
 endif
 
 if(ta>_ti)
-resto=math_fmod(to,2)
-if(resto=0)
-correntes=correntes',NULL'
-tempo=tempo',NULL'
-else
-tc=tc+1
-'set t 'tc
+*resto=math_fmod(to,2)
+*if(resto=0)
+*correntes=correntes',NULL'
+*tempo=tempo',NULL'
+*else
+*tc=tc+1
+
+'set t 'ta
 
 'q time'
 tempt=subwrd(result,3)
 tempo=tempo','tempt
 
 'd temperature'
-corrente=subwrd(result,4)
-corrente=math_format('%2.1f',corrente)
-correntes=correntes','corrente
+tsm=subwrd(result,4)
+tsm=math_format('%2.1f',tsm)
+tsms=tsms','tsm
+*endif
 endif
-endif
-to=to+1
+
+ta=ta+1
 endwhile
 
-say correntes
+say tsms
 
 *meteo=write('tabela_'_sar'_.txt',''lat1';'lon1';TTSM;'tempo'')
-meteo=write('tabela_'_sar'_.txt',''lat1'//'lon1',TSM,'correntes'')
+meteo=write('tabela_'_sar'_.txt',''lat1'//'lon1',TSM,'tsms'')
 return
 
 *################################################################################
@@ -491,32 +501,34 @@ if(ta=_ti)
 tempt=subwrd(result,3)
 tempo=tempt
 
-'d temperature'
+'d mag(u*1.94384,v*1.94384)'
 corrente=subwrd(result,4)
 corrente=math_format('%2.1f',corrente)
 correntes=corrente
 endif
 
 if(ta>_ti)
-resto=math_fmod(to,2)
-if(resto=0)
-correntes=correntes',NULL'
-tempo=tempo',NULL'
-else
-tc=tc+1
-'set t 'tc
+*resto=math_fmod(to,2)
+*if(resto=0)
+*correntes=correntes',NULL'
+*tempo=tempo',NULL'
+*else
+*tc=tc+1
+
+'set t 'ta
 
 'q time'
 tempt=subwrd(result,3)
 tempo=tempo','tempt
 
-'d temperature'
+'d mag(u*1.94384,v*1.94384)'
 corrente=subwrd(result,4)
 corrente=math_format('%2.1f',corrente)
 correntes=correntes','corrente
+*endif
 endif
-endif
-to=to+1
+
+ta=ta+1
 endwhile
 
 say correntes
@@ -525,4 +537,5 @@ meteo=write('tabela_'_sar'_.txt',''lat1'//'lon1'//CORRENTES//'correntes'')
 return
 
 *################################################################################
-* Fim da funcao TSM
+* Fim da funcao CORRENTES
+*################################################################################
