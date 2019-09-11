@@ -6,6 +6,7 @@
 # Autor: 1T(T) Damião e demais oficiais do CH-131     #
 #-----------------------------------------------------#
 
+from datetime import timedelta
 import datetime, time
 import os, sys, shutil
 from  ww3Funcs import alteraStr, alteraDia, horarios
@@ -20,16 +21,24 @@ if len(sys.argv) < 3:
     sys.exit(1)
 
 mod=sys.argv[1]
-data = horarios(sys.argv[2])
-data = datetime.date(int(data[0]),int(data[1]),int(data[2]))
+data = sys.argv[2] + '0'
+data = horarios(data)
+data = datetime.datetime(int(data[0]),int(data[1]),int(data[2]),int(data[3]))
 data_s  = data.strftime('%Y%m%d')
 datai = data.strftime('%Y%m%d')
 
+if mod=='gfs':
+    MOD='GFS'
+elif mod=='icon':
+    MOD='ICON'
+elif mod=='cosmo':
+    MOD='COSMO'
+
 # Delimitando a área de interesse
-lat_sul = '-30'   # latitude mais ao sul do recorte desejado
-lat_norte = '-5' # latitude mais ao norte do recorte desejado
-lon_oeste = '-45'   # longitude mais à oeste do recorte desejado
-lon_leste = '-18'   # longitude mais à leste do recorte desejado
+lat_sul = '-19'   # latitude mais ao sul do recorte desejado
+lat_norte = '-9' # latitude mais ao norte do recorte desejado
+lon_oeste = '-41'   # longitude mais à oeste do recorte desejado
+lon_leste = '-33'   # longitude mais à leste do recorte desejado
 
 import numpy as np
 import matplotlib as mpl
@@ -88,6 +97,7 @@ tit_tempo=['00','03','06','09']
 for tt in range(12,int(prog),3):
      tit_tempo.append(tt)
 
+        
 
 
 # Criando a figura para N prognósticos
@@ -149,16 +159,35 @@ for ii in range(0,int(prog),3):
     m.drawmeridians(np.arange(float(lon_oeste),float(lon_leste),5), linewidth=0.3, labels=[0,0,0,1])
     m.drawcountries(linewidth=0.8, color='k', antialiased=1, ax=None, zorder=None)
     m.readshapefile('/home/operador/grads/auxilio_decisao/scripts/shapefiles/BRA_adm1','BRA_adm1',linewidth=0.50,color='dimgray')
-    m.readshapefile('/home/operador/grads/auxilio_decisao/scripts/shapefiles/ne_10m_admin_0_countries','ne_10m_admin_0_countries',linewidth=0.50,color='dimgray')
-    m.readshapefile('/home/operador/grads/auxilio_decisao/scripts/shapefiles/Metareas','Metareas',linewidth=0.50,color='dimgray')
+    m.readshapefile('/home/operador/grads/auxilio_decisao/scripts/shapefiles/salvamar2','salvamar2',linewidth=0.50,color='black')
+    A,B = m(-38.65, -12.9)
+    m.plot(A, B, 'k*', markersize=5)
+    plt.text(A,B,' Salvador  ', ha='right', color='k', fontsize=6)
+    A,B = m(-37.12, -10.98)
+    m.plot(A, B, 'k*', markersize=5)
+    plt.text(A,B,' Aracaju  ', ha='right', color='k', fontsize=6)
+    A,B = m(-39.1, -14.8)
+    m.plot(A, B, 'ko', markersize=3)
+    plt.text(A,B,' Ilhéus  ', ha='right', color='k', fontsize=6)
+    A,B = m(-39.1, -16.44)
+    m.plot(A, B, 'ko', markersize=3)
+    plt.text(A,B,' Porto \n Seguro  ', ha='right', color='k', fontsize=6)
+    A,B = m(-39.3, -17.74)
+    m.plot(A, B, 'ko', markersize=3)
+    plt.text(A,B,'Caravelas ', ha='right', color='k', fontsize=6)  
+    A,B = m(-37.9, -12.36)
+    m.plot(A, B, 'ko', markersize=3)
+    plt.text(A,B,' Porto de\n Sauípe  ', ha='right', color='k', fontsize=6)        
     plt.hold(True)
     tit=str(tit_tempo[iii])
     iii=iii+1
-    plt.suptitle('Auxílio à Navegação - Comando do 2oDN \n'+data_s+' '+tit+'Z', fontsize=11)
+    dataprev = data + timedelta(hours=ii)
+    datatit = dataprev.strftime('%Y%m%d%H')
+    plt.suptitle('Auxílio à Decisão - Comando do 2 DN \n'+'WW3'+MOD+'  '+data_s+'00Z \n'+'  Prog. +'+tit+'h  Val:'+datatit+'Z ', y=0.99, fontsize=10)
     cbar=plt.colorbar(CS, format='%.1f', orientation='horizontal', pad=0.1, shrink=0.3)
     cbar.ax.set_xlabel('Categoria de Risco')
 #    plt.table(cellText = [['0 a 6.49', '6.5 a 7.9', '8 a 11']], cellLoc='center', loc ='bottom', cellColours = [['mediumseagreen','yellow','tomato']], fontsize=8)
 #    plt.figtext(0.3, 0.0, 'Área hachurada em Verde: Pontuação abaixo de 6.5 \n Área hachurada em Amarelo: Pontuação entre 6.5 e 7.9 \n Área hachurada em Vermelho: Pontuação acima de 8', va='baseline', fontsize=8)
-    plt.savefig('/home/operador/grads/gif/ww3_418/ww3'+mod+'/auxilionovo/auxilio2odn_'+data_s+'_'+tit+'.png', bbox_inches='tight', pad_inches=0.2, dpi=200)
+    plt.savefig('/home/operador/grads/gif/ww3_418/ww3'+mod+'/auxilio2oDN/auxilio2odn_'+data_s+'_'+tit+'.png', bbox_inches='tight', pad_inches=0.2, dpi=200)
 
 quit()
