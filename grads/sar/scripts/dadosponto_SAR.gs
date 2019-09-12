@@ -51,6 +51,9 @@ _timef=sublin(rc,2)
 rc=close(datafm)
 '!rm datafm'
 
+* Removendo arquivos DAT anteriores a 30 dias
+
+
 * Definindo diretorio de trabalho
 dirsar='/home/operador/grads/sar/ctl'
 
