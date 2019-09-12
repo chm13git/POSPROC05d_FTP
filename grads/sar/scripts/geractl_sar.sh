@@ -35,15 +35,16 @@ fi
 # Carregando variaveis
 HH=$1
 
-datahoje=`cat ~/datas/datacorrente${HH}`
-datahoje=`caldate ${datahoje} - 30d 'hhZddmmmyyyy' | tr [a-z] [A-Z]`
+datahoje1=`cat ~/datas/datacorrente${HH}`
+datahoje=`caldate ${datahoje1} - 30d 'hhZddmmmyyyy' | tr [a-z] [A-Z]`
+datahojem=`caldate ${datahoje1} - 12h yyyymmddhh`
 ANO=`echo ${datahoje} | cut -c9-12`
 MM=`echo ${datahoje} | cut -c6-8`
 DD=`echo ${datahoje} | cut -c4-5`
 
 # Definindo caminhos
 dirsarctl="/home/operador/grads/sar/ctl"
-dirsardat="/home/operador/grads/sar/dat"
+dirsarbin="/home/operador/grads/sar/bin"
 
 # Verificando se as dependencias do script estao disponiveis antes de prosseguir
 arqatm="cosmo_met"
@@ -51,7 +52,7 @@ arqond="ww3icon_met"
 arqoce="hycom_met"
 
 #####################################################################################
-# FOR para gerar CTL de cada modelo ATU com a datahora da ultima rodada
+# FOR para gerar CTL de cada modelo ATU com a datahora da ultima rodada disponivel
 mods="${arqatm} ${arqond} ${arqoce}"
 for mod in ${mods}; do
 
@@ -62,4 +63,11 @@ for mod in ${mods}; do
 	sed -i 's/DD/'${DD}'/g'		${dirsarctl}/${mod}.ctl
 	sed -i 's/HH/'${HH}'/g'		${dirsarctl}/${mod}.ctl
 
+	#####################################################################################
+	# Removendo binarios anteriores a 30 dias atras
+
+	echo "Removendo binarios anteriores a 30 dias: ${dirsarbin}/${mods}_${datahojem}.bin"
+	rm ${dirsarbin}/${mods}_${datahojem}.bin
+
 done
+
