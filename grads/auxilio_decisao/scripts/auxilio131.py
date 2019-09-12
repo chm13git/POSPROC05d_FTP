@@ -11,6 +11,8 @@ import datetime, time
 import os, sys, shutil
 from  ww3Funcs import alteraStr, alteraDia, horarios
 
+
+
 if len(sys.argv) < 3:
     print('+------------Utilização------------+')
     print('                                    ')
@@ -26,6 +28,34 @@ data = horarios(data)
 data = datetime.datetime(int(data[0]),int(data[1]),int(data[2]),int(data[3]))
 data_s  = data.strftime('%Y%m%d')
 datai = data.strftime('%Y%m%d')
+data_z1 = data.strftime('%d')
+data_z2 = data.strftime('%b')
+data_z3 = data.strftime('%y')
+
+if data_z2 == 'Jan':
+    data_z2 = 'JAN'
+if data_z2 == 'Feb':
+    data_z2 = 'FEV'
+if data_z2 == 'Mar':
+    data_z2 = 'MAR'
+if data_z2 == 'Apr':
+    data_z2 = 'ABR'
+if data_z2 == 'May':
+    data_z2 = 'MAI'
+if data_z2 == 'Jun':
+    data_z2 = 'JUN'
+if data_z2 == 'Jul':
+    data_z2 = 'JUL'
+if data_z2 == 'Aug':
+    data_z2 = 'AGO'
+if data_z2 == 'Sep':
+    data_z2 = 'SET'
+if data_z2 == 'Oct':
+    data_z2 = 'OUT'
+if data_z2 == 'Nov':
+    data_z2 = 'NOV'
+if data_z2 == 'Dec':
+    data_z2 = 'DEZ'
 
 if mod=='gfs':
     MOD='GFS'
@@ -153,37 +183,39 @@ for ii in range(0,int(prog),3):
     x,y=m(*np.meshgrid(lon,lat))
     dado=pt[ii,:,:]
     CS=m.contourf(x,y,dado,levels=[0,6.49,7.99,11],colors=['mediumseagreen','yellow','tomato'])
-    m.drawcoastlines()
+#    m.drawcoastlines()
     m.fillcontinents(color='white',lake_color='aqua')
     m.drawparallels(np.arange(float(lat_sul),float(lat_norte),5), linewidth=0.3, labels=[1,0,0,0],fmt='%g')
     m.drawmeridians(np.arange(float(lon_oeste),float(lon_leste),5), linewidth=0.3, labels=[0,0,0,1])
     m.drawcountries(linewidth=0.8, color='k', antialiased=1, ax=None, zorder=None)
     m.readshapefile('/home/operador/grads/auxilio_decisao/scripts/shapefiles/BRA_adm1','BRA_adm1',linewidth=0.50,color='dimgray')
-    m.readshapefile('/home/operador/grads/auxilio_decisao/scripts/shapefiles/salvamar2','salvamar2',linewidth=0.50,color='black')
     A,B = m(-38.65, -12.9)
-    m.plot(A, B, 'k*', markersize=5)
-    plt.text(A,B,' Salvador  ', ha='right', color='k', fontsize=6)
+    m.plot(A, B,)
+    plt.text(A,B,'Salvador (BTS) ', ha='right', va='center', color='k', fontsize=6)
     A,B = m(-37.12, -10.98)
-    m.plot(A, B, 'k*', markersize=5)
+    m.plot(A, B, 'ko', markersize=3)
     plt.text(A,B,' Aracaju  ', ha='right', color='k', fontsize=6)
     A,B = m(-39.1, -14.8)
-    m.plot(A, B, 'ko', markersize=3)
-    plt.text(A,B,' Ilhéus  ', ha='right', color='k', fontsize=6)
+    m.plot(A, B, 'ko', markersize=2)
+    plt.text(A,B,' Ilhéus  ', ha='right', va='top', color='k', fontsize=5)
     A,B = m(-39.1, -16.44)
-    m.plot(A, B, 'ko', markersize=3)
-    plt.text(A,B,' Porto \n Seguro  ', ha='right', color='k', fontsize=6)
-    A,B = m(-39.3, -17.74)
-    m.plot(A, B, 'ko', markersize=3)
-    plt.text(A,B,'Caravelas ', ha='right', color='k', fontsize=6)  
-    A,B = m(-37.9, -12.36)
-    m.plot(A, B, 'ko', markersize=3)
-    plt.text(A,B,' Porto de\n Sauípe  ', ha='right', color='k', fontsize=6)        
+    m.plot(A, B, 'ko', markersize=2)
+    plt.text(A,B,' Porto \n Seguro  ', ha='right', color='k', fontsize=5)
+    A,B = m(-39.2, -17.68)
+    m.plot(A, B, 'ko', markersize=2)
+    plt.text(A,B,'Caravelas ', ha='right', color='k', fontsize=5)  
+    A,B = m(-37.95, -12.33)
+    m.plot(A, B, 'ko', markersize=2)
+    plt.text(A,B,' Porto de\n Sauípe  ', ha='right', color='k', fontsize=5)
+    A,B = m(-39, -13.42)
+    m.plot(A, B, 'ko', markersize=2)
+    plt.text(A,B,'Morro de    \nSão Paulo  ', ha='right',va='center', color='k', fontsize=5)              
     plt.hold(True)
     tit=str(tit_tempo[iii])
     iii=iii+1
     dataprev = data + timedelta(hours=ii)
-    datatit = dataprev.strftime('%Y%m%d%H')
-    plt.suptitle('Auxílio à Decisão - Comando do 2 DN \n'+'WW3'+MOD+'  '+data_s+'00Z \n'+'  Prog. +'+tit+'h  Val:'+datatit+'Z ', y=0.99, fontsize=10)
+    datatit1 = dataprev.strftime('%d%H')
+    plt.suptitle('Auxílio à Decisão - Comando do 2'+chr(0x00B0)+'DN \n'+'WW3'+MOD+'  '+data_z1+'0000Z'+data_z2+data_z3+' \n'+'  Prog. +'+tit+'h  Val:'+datatit1+'00Z'+data_z2+data_z3+'', y=0.99, fontsize=10)
     cbar=plt.colorbar(CS, format='%.1f', orientation='horizontal', pad=0.1, shrink=0.3)
     cbar.ax.set_xlabel('Categoria de Risco')
 #    plt.table(cellText = [['0 a 6.49', '6.5 a 7.9', '8 a 11']], cellLoc='center', loc ='bottom', cellColours = [['mediumseagreen','yellow','tomato']], fontsize=8)
