@@ -51,16 +51,16 @@ _timef=sublin(rc,2)
 rc=close(datafm)
 '!rm datafm'
 
-* Removendo arquivos DAT anteriores a 30 dias
+* Removendo arquivos DAT anteriores a 30 dias - A FAZER!!!
 
 
 * Definindo diretorio de trabalho
-dirsar='/home/operador/grads/sar/ctl'
+dirsar='/home/operador/grads/sar'
 
 * Definindo caminnhoarq dos modelos
-_arqatm=dirsar'/cosmo_met.ctl'
-_arqond=dirsar'/ww3icon_met.ctl'
-_arqoce=dirsar'/hycom_met.ctl'
+_arqatm=dirsar'/ctl/cosmo_met.ctl'
+_arqond=dirsar'/ctl/ww3icon_met.ctl'
+_arqoce=dirsar'/ctl/hycom_met.ctl'
 
 * Gravando args lat e lon numa var para uso nas funcoes
 args=_lati" "_loni
@@ -83,10 +83,15 @@ _tf=subwrd(linha,9)
 * Executando as funcoes das variaveis. A ordem das var respeita a ordem de chamada da funcao
 tempo(args)
 vento10m(args)
+temp2m(args)
 ondas(args)
 corrente(args)
-temp2m(args)
 tsm(args)
+
+* Eliminando espacos desnecessarios e movendo para o dir tabelas
+'!sed -i "s/ //g" tabela_'_sar'.txt'
+'!mv tabela_'_sar'.txt 'dirsar'/tabelas/tabela_'_sar'.txt'
+
 
 'quit'
 
