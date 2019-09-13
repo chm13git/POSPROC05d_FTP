@@ -2,14 +2,14 @@
 * Inicio da funcao GERATABELASAR
 *################################################################################
 
-function geratabelasar(args)
+function geratabelasar(argsf)
 
 * Carregando argumentos
-_datai=subwrd(args,1)
-_dataf=subwrd(args,2)
-_lati=subwrd(args,3)
-_loni=subwrd(args,4)
-_sar=subwrd(args,5)
+_datai=subwrd(argsf,1)
+_dataf=subwrd(argsf,2)
+_lati=subwrd(argsf,3)
+_loni=subwrd(argsf,4)
+_sar=subwrd(argsf,5)
 
 say 'Data inicial: '_datai
 say 'Data final:   '_dataf
@@ -51,9 +51,6 @@ _timef=sublin(rc,2)
 rc=close(datafm)
 '!rm datafm'
 
-* Removendo arquivos DAT anteriores a 30 dias - A FAZER!!!
-
-
 * Definindo diretorio de trabalho
 dirsar='/home/operador/grads/sar'
 
@@ -83,14 +80,15 @@ _tf=subwrd(linha,9)
 * Executando as funcoes das variaveis. A ordem das var respeita a ordem de chamada da funcao
 tempo(args)
 vento10m(args)
-temp2m(args)
 ondas(args)
 corrente(args)
+temp2m(args)
 tsm(args)
 
 * Eliminando espacos desnecessarios e movendo para o dir tabelas
-'!sed -i "s/ //g" tabela_'_sar'.txt'
-'!mv tabela_'_sar'.txt 'dirsar'/tabelas/tabela_'_sar'.txt'
+sar=subwrd(argsf,5)
+'!sed -i "s/ //g" tabela_'%sar'.txt'
+'!mv tabela_'sar'.txt 'dirsar'/tabelas/tabela_'sar'.txt'
 
 
 'quit'
@@ -114,6 +112,7 @@ function tempo(args)
 
 * Abrindo os arquivos dos modelos
 'open '%_arqatm
+say 'Escrevendo o TEMPO'
 
 lat1=subwrd(args,1)
 lon1=subwrd(args,2)
@@ -157,6 +156,7 @@ function temp2m(args)
 
 * Abrindo os arquivos dos modelos
 'open '%_arqatm
+say 'Escrevendo o T2M'
 
 lat1=subwrd(args,1)
 lon1=subwrd(args,2)
@@ -210,6 +210,8 @@ function vento10m(args)
 
 * Abrindo os arquivos dos modelos
 'open '%_arqatm
+say 'Escrevendo o V10M'
+
 
 lat1=subwrd(args,1)
 lon1=subwrd(args,2)
@@ -275,6 +277,7 @@ function ondas(args)
 
 * Abrindo o arquivo de ondas
 'open '%_arqond
+say 'Escrevendo o ONDAS'
 
 lat1=subwrd(args,1)
 lon1=subwrd(args,2)
@@ -291,7 +294,7 @@ ta=_ti
 
 ondas=' '
 while(ta<=_tf)
-'set t 'to
+'set t 'ta
 
 'q time'
 tempt=subwrd(result,3)
@@ -344,17 +347,17 @@ return
 *################################################################################
 * Inicio da funcao TSM
 *################################################################################
-function corrente(args)
+function tsm(args)
 'reinit'
 
 * Abrindo o arquivo de TSM
-'sdfopen '%_arqoce
+'open '%_arqoce
+say 'Escrevendo o TSM'
 
 lat1=subwrd(args,1)
 lon1=subwrd(args,2)
 'set lat 'lat1
 'set lon 'lon1
-'set z 33'
 
 ta=_ti
 
@@ -396,19 +399,19 @@ return
 *=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
 *################################################################################
-* Inicio da funcao CORRENTES
+* Inicio da funcao CORRENTE
 *################################################################################
-function correntes(args)
+function corrente(args)
 'reinit'
 
 * Abrindo o arquivo
-'sdfopen '%_arqoce
+'open '%_arqoce
+say 'Escrevendo o CORRENTE'
 
 lat1=subwrd(args,1)
 lon1=subwrd(args,2)
 'set lat 'lat1
 'set lon 'lon1
-'set z 33'
 
 ta=_ti
 
@@ -432,29 +435,29 @@ dircorr=math_format('%3.0f',dircorr)
 corrente=subwrd(result,4)
 corrente=math_format('%2.1f',corrente)
 
-dircorr=dircorr'-'corrente
+dircorrente=dircorr'-'corrente
 
 if(ta=_ti)
 tempo=tempt
 dircorrs=dircorr
 correntes=corrente
-dircorrs=dircorr
+dircorrentes=dircorrente
 endif
 if(ta>_ti)
 tempo=tempo'//'tempt
 dircorrs=dircorrs'//'dircorr
 correntes=correntes'//'corrente
-dircorrs=dircorrs'//'dircorr
+dircorrentes=dircorrentes'//'dircorrente
 endif
 
 ta=ta+1
 endwhile
 
-say dircorrs
+say dircorrentes
 
-meteo=write('tabela_'_sar'.txt',''lat1'//'lon1'//CORRENTES//'dircorrs'')
+meteo=write('tabela_'_sar'.txt',''lat1'//'lon1'//CORRENTES//'dircorrentes'')
 return
 
 *################################################################################
-* Fim da funcao CORRENTES
+* Fim da funcao CORRENTE
 *################################################################################
