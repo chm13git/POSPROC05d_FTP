@@ -135,7 +135,7 @@ while [ ${Abort} -gt ${Tspended} ]; do
       fi
     elif [ ${HH} = 00 ] && [ -e ${workdir}/${Atmos}_SAFO ] && [ -e ${workdir}/${Ondas}_SAFO ] && [ -e ${workdir}/${Oceano}_SAFO ]; then
       echo ' '
-      echo ' Foram atualizados e gerados os .dat dos modelos: '${Atmos}' ' ${Ondas}' '${Oceano}
+      echo ' Foram atualizados e gerados os .dat dos modelos: '${Atmos}' ' ${Ondas}' '${Oceano}' '$AMD' '$HH
       echo ' Limpando workdir e saindo...'
       echo ' '
       for arq in $workdir/*; do
@@ -144,7 +144,7 @@ while [ ${Abort} -gt ${Tspended} ]; do
       exit 1
     elif [ ${HH} = 12 ] && [ -e ${workdir}/${Atmos}_SAFO ] && [ -e ${workdir}/${Ondas}_SAFO ]; then
       echo ' '
-      echo ' Foram atualizados e gerados os .dat dos modelos: '${Atmos}' ' ${Ondas}' '${Oceano}
+      echo ' Foram atualizados e gerados os .dat dos modelos: '${Atmos}' ' ${Ondas}' '$AMD' '$HH
       echo ' Limpando workdir e saindo...'
       echo ' '
       for arq in $workdir/*; do
