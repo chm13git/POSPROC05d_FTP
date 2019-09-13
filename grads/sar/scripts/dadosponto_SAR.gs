@@ -86,9 +86,8 @@ temp2m(args)
 tsm(args)
 
 * Eliminando espacos desnecessarios e movendo para o dir tabelas
-sar=subwrd(argsf,5)
-'!sed -i "s/ //g" tabela_'%sar'.txt'
-'!mv tabela_'sar'.txt 'dirsar'/tabelas/tabela_'sar'.txt'
+*sed -i "s/ //g" tabela_'%sar'.txt'
+*'!mv tabela_'sar'.txt 'dirsar'/tabelas/tabela_'sar'.txt'
 
 
 'quit'
@@ -174,7 +173,7 @@ tempt=subwrd(result,3)
 
 'd t2m'
 temp2m=subwrd(result,4)-273.15
-temp2m=math_format('%4.0f',temp2m)
+temp2m=math_format('%2.1f',temp2m)
 
 if(ta=_ti)
 tempo=tempt
