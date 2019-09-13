@@ -67,7 +67,7 @@ while [ ${Abort} -gt ${Tspended} ]; do
     if [ ${MODEL} = ${Atmos} ] && [ -e ${Atmos_ctl} ] && [ ! -e ${workdir}/${MODEL}_SAFO ]; then
 
       echo ' '
-      echo ' Preparando .dat do '${MODEL}' da data/hora: '${AMD}${HH}
+      echo ' Preparando .bin do '${MODEL}' da data/hora: '${AMD}${HH}
       echo ' '      
       ln -sf ${Atmos_ctl} cosmo.ctl; ln -sf ${Atmos_idx} cosmo.idx
       cp /home/operador/grads/sar/scripts/gerabin_cosmo.gs tmp1
@@ -91,7 +91,7 @@ while [ ${Abort} -gt ${Tspended} ]; do
     elif [ ${MODEL} = ${Ondas} ] && [ -e ${Ondas_ctl} ] && [ ! -e ${workdir}/${MODEL}_SAFO ]; then
 
       echo ' '
-      echo ' Preparando .dat do '${MODEL}' da data/hora: '${AMD}${HH}
+      echo ' Preparando .bin do '${MODEL}' da data/hora: '${AMD}${HH}
       echo ' '      
       ln -sf ${Ondas_ctl} ww3icon.ctl; ln -sf ${Ondas_grds} ww3.grads
       cp /home/operador/grads/sar/scripts/gerabin_ww3.gs tmp1
@@ -113,7 +113,7 @@ while [ ${Abort} -gt ${Tspended} ]; do
     elif [ ${MODEL} = ${Oceano} ] && [ ${HH} = 00 ] && [ -e ${Oceano_dado} ] && [ ! -e ${workdir}/${MODEL}_SAFO ]; then
 
       echo ' '
-      echo ' Preparando .dat do '${MODEL}' da data/hora: '${AMD}${HH}
+      echo ' Preparando .bin do '${MODEL}' da data/hora: '${AMD}${HH}
       echo ' '      
       ln -sf ${Oceano_dado} hycom.nc
       cp /home/operador/grads/sar/scripts/gerabin_hycom.gs tmp1
@@ -135,7 +135,7 @@ while [ ${Abort} -gt ${Tspended} ]; do
       fi
     elif [ ${HH} = 00 ] && [ -e ${workdir}/${Atmos}_SAFO ] && [ -e ${workdir}/${Ondas}_SAFO ] && [ -e ${workdir}/${Oceano}_SAFO ]; then
       echo ' '
-      echo ' Foram atualizados e gerados os .dat dos modelos: '${Atmos}' ' ${Ondas}' '${Oceano}' '$AMD' '$HH
+      echo ' Foram atualizados e gerados os .bin dos modelos: '${Atmos}' ' ${Ondas}' '${Oceano}' '$AMD' '$HH
       echo ' Limpando workdir e saindo...'
       echo ' '
       for arq in $workdir/*; do
@@ -144,7 +144,7 @@ while [ ${Abort} -gt ${Tspended} ]; do
       exit 1
     elif [ ${HH} = 12 ] && [ -e ${workdir}/${Atmos}_SAFO ] && [ -e ${workdir}/${Ondas}_SAFO ]; then
       echo ' '
-      echo ' Foram atualizados e gerados os .dat dos modelos: '${Atmos}' ' ${Ondas}' '$AMD' '$HH
+      echo ' Foram atualizados e gerados os .bin dos modelos: '${Atmos}' ' ${Ondas}' '$AMD' '$HH
       echo ' Limpando workdir e saindo...'
       echo ' '
       for arq in $workdir/*; do
