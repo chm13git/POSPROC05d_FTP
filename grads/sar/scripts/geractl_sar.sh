@@ -37,7 +37,7 @@ HH=$1
 
 datahoje1=`cat ~/datas/datacorrente${HH}`
 datahoje=`caldate ${datahoje1} - 30d 'hhZddmmmyyyy' | tr [a-z] [A-Z]`
-datahojem=`caldate ${datahoje1} - 12h yyyymmddhh`
+datahojem=`caldate ${datahoje1} - 732h yyyymmddhh`
 ANO=`echo ${datahoje} | cut -c9-12`
 MM=`echo ${datahoje} | cut -c6-8`
 DD=`echo ${datahoje} | cut -c4-5`
@@ -66,8 +66,8 @@ for mod in ${mods}; do
 	#####################################################################################
 	# Removendo binarios anteriores a 30 dias atras
 
-	echo "Removendo binarios anteriores a 30 dias: ${dirsarbin}/${mods}_${datahojem}.bin"
-	rm ${dirsarbin}/${mods}_${datahojem}.bin
+	echo "Removendo binarios anteriores a 30 dias: ${dirsarbin}/${mod}_${datahojem}.bin"
+	rm ${dirsarbin}/${mod}_${datahojem}.bin
 
 done
 
