@@ -9,19 +9,21 @@ _datai=subwrd(argsf,1)
 _dataf=subwrd(argsf,2)
 _lati=subwrd(argsf,3)
 _loni=subwrd(argsf,4)
-_sar=subwrd(argsf,5)
+_nsar=subwrd(argsf,5)
+_sar=subwrd(argsf,6)
 
 say 'Data inicial: '_datai
 say 'Data final:   '_dataf
 say 'Latitude:     '_lati
 say 'Longitude:    '_loni
+say 'Num SAR:      '_nsar
 say 'SAR:          '_sar
 
 * Testando se todos os args foram passados
-if(_datai='') | (_dataf='') | (_lati='') | (_loni='') | (_sar='')
+if(_datai='') | (_dataf='') | (_lati='') | (_loni='') | (_nsar='') | (_sar='')
 say '### ARGUMENTOS INSUFICIENTES! ###'
 say 'Entre com a data inicial, a data final, a latitude, a longitude e o nome do SAR.'
-say 'Ex.: dadosponto_SAR.gs 2019083000 2019090100 -23.4 -43.1 SARSSE023'
+say 'Ex.: dadosponto_SAR.gs 2019083000 2019090100 -23.4 -43.1 SSE023 SUL'
 'quit'
 endif
 
@@ -50,6 +52,40 @@ rc=read(datafm)
 _timef=sublin(rc,2)
 rc=close(datafm)
 '!rm datafm'
+
+* Definindo emails a serem enviados para cada regiao de SAR
+
+*emailbrasil='mrccbrazil@marinha.mil.br mrccbrazil@gmail.com'
+emailbrasil='felipenc2@gmail.com'
+
+if (_sar='SUL')
+emailregional='mrccriogrande@marinha.mil.br'
+endif
+if (_sar='SUESTE')
+emailregional='mrccrio@marinha.mil.br'
+endif
+if (_sar='SUL_SUESTE')
+emailregional='mrccsaopaulo@marinha.mil.br'
+endif
+if (_sar='LESTE')
+emailregional='mrccsalvador@marinha.mil.br'
+endif
+if (_sar='CENTRO_OESTE')
+emailregional='rccbrasilia@marinha.mil.br'
+endif
+if (_sar='NORDESTE')
+emailregional='mrccnatal@marinha.mil.br'
+endif
+if (_sar='NORTE')
+emailregional='mrccbelem@marinha.mil.br'
+endif
+if (_sar='OESTE')
+emailregional='rccladario@marinha.mil.br'
+endif
+if (_sar='NOROESTE')
+emailregional='rccmanaus@marinha.mil.br'
+endif
+
 
 * Definindo diretorio de trabalho
 dirsar='/home/operador/grads/sar'
@@ -87,8 +123,9 @@ tsm(args)
 
 * Eliminando espacos desnecessarios e movendo para o dir tabelas
 *sed -i "s/ //g" tabela_'%sar'.txt'
+*'!mail -s "TABELA BPME SAR '_nsar'" -t '_emailbrasil' '_emailregional' -A tabela_'_sar'.txt'
+'!echo |mail -s "TABELA BPME SAR '_nsar'" '_emailbrasil' -A tabela_'_sar'.txt'
 *'!mv tabela_'sar'.txt 'dirsar'/tabelas/tabela_'sar'.txt'
-
 
 'quit'
 
