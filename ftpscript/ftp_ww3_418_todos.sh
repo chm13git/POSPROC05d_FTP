@@ -60,7 +60,7 @@ if [[ $mod == 'cosmo' ]] ; then
 fi
 
 
-if [[ $cyc == '00' ]] ; then
+if [[ $cyc == '00' ]] && [[ $mod != 'cosmo' ]] ; then
 
    /home/operador/ftpscript/ftp_ww3_418.sh gfs  $cyc car $cam
    /home/operador/ftpscript/ftp_ww3_418.sh icon $cyc car $cam 
