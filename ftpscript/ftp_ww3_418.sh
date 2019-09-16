@@ -317,9 +317,7 @@ fi
 if [ $AREA == "iap" ] || [ $AREA == "met" ]  || [ $AREA == "sse" ]  || [ $AREA == "ne" ]  || [ $AREA == "car" ]
 then
 
- cd /home/operador/grads/ww3_418/scripts/
-
- ./geraondograma.sh $HH $FORC $AREA
+ /home/operador/grads/ww3_418/scripts/geraondograma.sh $HH $FORC $AREA
  #cd $WORKDIR/ww3${AREA}/ondogramas/scripts
  ##/usr/local/bin/atualiza_status.pl ${STATUS} 1 "FAZENDO ONDOGRAMAS"
 
@@ -337,7 +335,10 @@ fi
 # --------------------
 # Ondogramas Comissoes
 
-/home/operador/ftpscript/geraondograma_comissao.sh $HH $CAMINHO
+if [ \( $AREA == "iap" \) ] || [ \( $AREA == "met" \) ]
+then
+  /home/operador/ftpscript/geraondograma_comissao.sh $HH $CAMINHO
+fi
 
 rm /home/operador/grads/ww3_418/scripts/ww3.ctl
 rm /home/operador/grads/ww3_418/scripts/ww3.grads
@@ -351,14 +352,30 @@ if [ \( "${FORC}" == "gfs" -a "${AREA}" == "ant" \) ] || [ \( "${FORC}" == "icon
  /home/operador/anaconda3/bin/python /home/operador/grads/ww3_418/scripts/ww3_tabela_Drake.py $FORC $HH
 fi
 
+#---------------------Auxílio 2o DN----------------------------------------------
+
+if [ \( "${AREA}" == "met" \) ] ; then
+ echo
+ echo 'FAZENDO AUXILIO para o 2o DN'
+ echo
+
+ datahojea=`date +"%Y%m%d"`
+
+ 
+ /home/operador/anaconda3/envs/auxdechycom/bin/python /home/operador/grads/auxilio_decisao/scripts/auxilio131.py $FORC $datahojea $HH
+fi
+#-------------------------------------------------------------------------------
+
+
 # echo
 # echo 'FAZENDO AUXILIO para area '${AREA}''
 # echo
 
 #/home/operador/grads/auxilio_decisao/scripts/auxilio.sh $HH ww3${AREA}
 
-/home/operador/grads/ww3_418/scripts/nc3_to_nc4.sh ${FORC} ${HH} ${AREA}
+#1T Andressa DAgostini: Comentado em 16AGO2019 por que a Petrobras está utilizando os dados horários enviados pela DPNS31
+#/home/operador/grads/ww3_418/scripts/nc3_to_nc4.sh ${FORC} ${HH} ${AREA}
 
 MSG="ENCERRADO POS-PROC WW3/${FORC} ${datahoje} ${HH}Z"
 
-/usr/bin/input_status.php ww3${FORC} ${HH} ${RODADA} VERDE "${MSG}"
+#/usr/bin/input_status.php ww3${FORC} ${HH} ${RODADA} VERDE "${MSG}" comentado dia 16SET por erro causado por essa linha
