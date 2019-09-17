@@ -10,20 +10,18 @@ _dataf=subwrd(argsf,2)
 _lati=subwrd(argsf,3)
 _loni=subwrd(argsf,4)
 _nsar=subwrd(argsf,5)
-_sar=subwrd(argsf,6)
 
 say 'Data inicial: '_datai
 say 'Data final:   '_dataf
 say 'Latitude:     '_lati
 say 'Longitude:    '_loni
-say 'Num SAR:      '_nsar
-say 'SAR:          '_sar
+say 'Nome SAR:     '_nsar
 
 * Testando se todos os args foram passados
-if(_datai='') | (_dataf='') | (_lati='') | (_loni='') | (_nsar='') | (_sar='')
+if(_datai='') | (_dataf='') | (_lati='') | (_loni='') | (_nsar='')
 say '### ARGUMENTOS INSUFICIENTES! ###'
-say 'Entre com a data inicial, a data final, a latitude, a longitude e o nome do SAR.'
-say 'Ex.: dadosponto_SAR.gs 2019083000 2019090100 -23.4 -43.1 SSE023 SUL'
+say 'Entre com a data inicial, a data final, a latitude, a longitude e o nome do SAR, conforme SOL pelo pedido de abertura de SAR.'
+say 'Ex.: dadosponto_SAR.gs 2019083000 2019090100 -23.4 -43.1 SSE023'
 'quit'
 endif
 
@@ -56,35 +54,35 @@ rc=close(datafm)
 * Definindo emails a serem enviados para cada regiao de SAR
 
 *emailbrasil='mrccbrazil@marinha.mil.br mrccbrazil@gmail.com'
-emailbrasil='felipenc2@gmail.com'
+*emailbrasil='felipenc2@gmail.com'
 
-if (_sar='SUL')
-emailregional='mrccriogrande@marinha.mil.br'
-endif
-if (_sar='SUESTE')
-emailregional='mrccrio@marinha.mil.br'
-endif
-if (_sar='SUL_SUESTE')
-emailregional='mrccsaopaulo@marinha.mil.br'
-endif
-if (_sar='LESTE')
-emailregional='mrccsalvador@marinha.mil.br'
-endif
-if (_sar='CENTRO_OESTE')
-emailregional='rccbrasilia@marinha.mil.br'
-endif
-if (_sar='NORDESTE')
-emailregional='mrccnatal@marinha.mil.br'
-endif
-if (_sar='NORTE')
-emailregional='mrccbelem@marinha.mil.br'
-endif
-if (_sar='OESTE')
-emailregional='rccladario@marinha.mil.br'
-endif
-if (_sar='NOROESTE')
-emailregional='rccmanaus@marinha.mil.br'
-endif
+*if (_sar='SUL')
+*emailregional='mrccriogrande@marinha.mil.br'
+*endif
+*if (_sar='SUESTE')
+*emailregional='mrccrio@marinha.mil.br'
+*endif
+*if (_sar='SUL_SUESTE')
+*emailregional='mrccsaopaulo@marinha.mil.br'
+*endif
+*if (_sar='LESTE')
+*emailregional='mrccsalvador@marinha.mil.br'
+*endif
+*if (_sar='CENTRO_OESTE')
+*emailregional='rccbrasilia@marinha.mil.br'
+*endif
+*if (_sar='NORDESTE')
+*emailregional='mrccnatal@marinha.mil.br'
+*endif
+*if (_sar='NORTE')
+*emailregional='mrccbelem@marinha.mil.br'
+*endif
+*if (_sar='OESTE')
+*emailregional='rccladario@marinha.mil.br'
+*endif
+*if (_sar='NOROESTE')
+*emailregional='rccmanaus@marinha.mil.br'
+*endif
 
 
 * Definindo diretorio de trabalho
@@ -122,10 +120,10 @@ temp2m(args)
 tsm(args)
 
 * Eliminando espacos desnecessarios e movendo para o dir tabelas
-*sed -i "s/ //g" tabela_'%sar'.txt'
+*'!sed -e "s/ ,g" tabela_'%_nsar%'.txt'
 *'!mail -s "TABELA BPME SAR '_nsar'" -t '_emailbrasil' '_emailregional' -A tabela_'_sar'.txt'
-'!echo |mail -s "TABELA BPME SAR '_nsar'" '_emailbrasil' -A tabela_'_sar'.txt'
-*'!mv tabela_'sar'.txt 'dirsar'/tabelas/tabela_'sar'.txt'
+*'!cat msg_padrao.txt | mail -s "TABELA BPME SAR '_nsar'" '_emailbrasil' -A tabela_'_sar'.txt'
+'!mv tabela_'_nsar'.txt 'dirsar'/tabelas/tabela_'_nsar'.txt'
 
 'quit'
 
@@ -167,14 +165,14 @@ if(ta=_ti)
 tempo=tempt
 endif
 if(ta>_ti)
-tempo=tempo'//'tempt
+tempo=tempo','tempt
 endif
 ta=ta+1
 endwhile
 
 say tempo
 
-meteo=write('tabela_'_sar'.txt',''lat1'//'lon1'//TEMPO//'tempo'')
+meteo=write('tabela_'_nsar'.txt','TEMPO,'tempo'')
 return
 
 *################################################################################
@@ -218,7 +216,7 @@ temp2ms=temp2m
 endif
 if(ta>_ti)
 tempo=tempo','tempt
-temp2ms=temp2ms'//'temp2m
+temp2ms=temp2ms','temp2m
 endif
 
 ta=ta+1
@@ -227,8 +225,8 @@ endwhile
 say temp2ms
 *say temperaturasmax
 
-*meteo=write('tabela_'_sar'.txt',''lat1'//'lon1',TAIR TEMP,'tempo'')
-meteo=write('tabela_'_sar'.txt',''lat1'//'lon1'//TEMP AR//'temp2ms'')
+*meteo=write('tabela_'_nsar'.txt','TAIR TEMP,'tempo'')
+meteo=write('tabela_'_nsar'.txt','TEMP AR,'temp2ms'')
 return
 
 *################################################################################
@@ -285,9 +283,9 @@ dirintvento10ms=dirintvento10m
 endif
 if(ta>_ti)
 tempo=tempo','tempt
-dirvento10ms=dirvento10ms'//'dirvento10m
-intvento10ms=intvento10ms'//'intvento10m
-dirintvento10ms=dirintvento10ms'//'dirintvento10m
+dirvento10ms=dirvento10ms','dirvento10m
+intvento10ms=intvento10ms','intvento10m
+dirintvento10ms=dirintvento10ms','dirintvento10m
 endif
 
 ta=ta+1
@@ -295,7 +293,7 @@ endwhile
 
 say dirintvento10ms
 
-meteo=write('tabela_'_sar'.txt',''lat1'//'lon1'//VENTOS//'dirintvento10ms'')
+meteo=write('tabela_'_nsar'.txt','VENTOS,'dirintvento10ms'')
 return
 
 *################################################################################
@@ -361,9 +359,9 @@ dirhss=dirhs
 endif
 if(ta>_ti)
 tempo=tempo','tempt
-dirondas=dirondas'//'dironda
-ondas=ondas'//'onda
-dirhss=dirhss'//'dirhs
+dirondas=dirondas','dironda
+ondas=ondas','onda
+dirhss=dirhss','dirhs
 endif
 
 ta=ta+1
@@ -371,7 +369,7 @@ endwhile
 
 say dirhss
 
-meteo=write('tabela_'_sar'.txt',''lat1'//'lon1'//ONDAS//'dirhss'')
+meteo=write('tabela_'_nsar'.txt','ONDAS,'dirhss'')
 return
 
 *################################################################################
@@ -415,8 +413,8 @@ tempo=tempt
 tsms=tsm
 endif
 if(ta>_ti)
-tempo=tempo'//'tempt
-tsms=tsms'//'tsm
+tempo=tempo','tempt
+tsms=tsms','tsm
 endif
 
 ta=ta+1
@@ -424,8 +422,8 @@ endwhile
 
 say tsms
 
-*meteo=write('tabela_'_sar'.txt',''lat1';'lon1';TTSM;'tempo'')
-meteo=write('tabela_'_sar'.txt',''lat1'//'lon1'//TSM//'tsms'')
+*meteo=write('tabela_'_nsar'.txt',''lat1';'lon1';TTSM;'tempo'')
+meteo=write('tabela_'_nsar'.txt','TSM,'tsms'')
 return
 
 *################################################################################
@@ -480,10 +478,10 @@ correntes=corrente
 dircorrentes=dircorrente
 endif
 if(ta>_ti)
-tempo=tempo'//'tempt
-dircorrs=dircorrs'//'dircorr
-correntes=correntes'//'corrente
-dircorrentes=dircorrentes'//'dircorrente
+tempo=tempo','tempt
+dircorrs=dircorrs','dircorr
+correntes=correntes','corrente
+dircorrentes=dircorrentes','dircorrente
 endif
 
 ta=ta+1
@@ -491,7 +489,7 @@ endwhile
 
 say dircorrentes
 
-meteo=write('tabela_'_sar'.txt',''lat1'//'lon1'//CORRENTES//'dircorrentes'')
+meteo=write('tabela_'_nsar'.txt','CORRENTES,'dircorrentes'')
 return
 
 *################################################################################
