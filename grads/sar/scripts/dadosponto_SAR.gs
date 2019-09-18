@@ -123,7 +123,7 @@ tsm(args)
 *'!sed -e "s/ ,g" tabela_'%_nsar%'.txt'
 *'!mail -s "TABELA BPME SAR '_nsar'" -t '_emailbrasil' '_emailregional' -A tabela_'_sar'.txt'
 *'!cat msg_padrao.txt | mail -s "TABELA BPME SAR '_nsar'" '_emailbrasil' -A tabela_'_sar'.txt'
-'!mv tabela_'_nsar'.txt 'dirsar'/tabelas/tabela_'_nsar'.txt'
+*'!cp tabela_'_nsar'.txt /home/operador/grads/sar/tabelas'
 
 'quit'
 
@@ -172,7 +172,7 @@ endwhile
 
 say tempo
 
-meteo=write('tabela_'_nsar'.txt','TEMPO,'tempo'')
+meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt','TEMPO,'tempo'')
 return
 
 *################################################################################
@@ -225,8 +225,8 @@ endwhile
 say temp2ms
 *say temperaturasmax
 
-*meteo=write('tabela_'_nsar'.txt','TAIR TEMP,'tempo'')
-meteo=write('tabela_'_nsar'.txt','TEMP AR,'temp2ms'')
+*meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt','TAIR TEMP,'tempo'')
+meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt','TEMP AR,'temp2ms'')
 return
 
 *################################################################################
@@ -262,9 +262,11 @@ while(ta<=_tf)
 'q time'
 tempt=subwrd(result,3)
 
-'define dirvento10m=(57.3*atan2(u_10m,v_10m)+180)'
+*'define dirvento10m=((180/3.14)*atan2(u_10m,v_10m)+180)'
+'define dirvento10m=((180/3.14)*atan2(-u_10m,-v_10m))'
 'd dirvento10m'
 dirvento10m=subwrd(result,4)
+if (dirvento10m<0);dirvento10m=360+dirvento10m;endif
 dirvento10m=math_format('%3.0f',dirvento10m)
 
 'define intvento10m=mag(U_10m*1.94,V_10m*1.94)'
@@ -293,7 +295,7 @@ endwhile
 
 say dirintvento10ms
 
-meteo=write('tabela_'_nsar'.txt','VENTOS,'dirintvento10ms'')
+meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt','VENTOS,'dirintvento10ms'')
 return
 
 *################################################################################
@@ -336,13 +338,11 @@ tempt=subwrd(result,3)
 * Convertendo de radianos para graus. Usando a direcao de pico (dp) como REF
 'define u =cos(dp)'
 'define v =sin(dp)'
-'define dironda=(57.325*atan2(-u,-v))'
+'define dironda=(180/3.14*atan2(-u,-v))'
 'd dironda'
 dironda=subwrd(result,4)
 * Convertendo coord lon para ficar REF inicando em Leste (so o modond precisa disso)
-if(dironda<=0)
-dironda=360+dironda
-endif
+if(dironda<=0);dironda=360+dironda;endif
 dironda=math_format('%3.0f',dironda)
 
 'd hs'
@@ -369,7 +369,7 @@ endwhile
 
 say dirhss
 
-meteo=write('tabela_'_nsar'.txt','ONDAS,'dirhss'')
+meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt','ONDAS,'dirhss'')
 return
 
 *################################################################################
@@ -422,8 +422,8 @@ endwhile
 
 say tsms
 
-*meteo=write('tabela_'_nsar'.txt',''lat1';'lon1';TTSM;'tempo'')
-meteo=write('tabela_'_nsar'.txt','TSM,'tsms'')
+*meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt',''lat1';'lon1';TTSM;'tempo'')
+meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt','TSM,'tsms'')
 return
 
 *################################################################################
@@ -457,12 +457,11 @@ while(ta<=_tf)
 tempt=subwrd(result,3)
 
 * Calculando direcao de corrente em graus
-'define dircorr=(57.325*atan2(u,v)+180)'
+*'define dircorr=(57.325*atan2(u,v)+180)'
+'define dircorr=(57.325*atan2(u,v))'
 'd dircorr'
 dircorr=subwrd(result,4)
-if(dircorr<=0)
-dircorr=360+dircorr
-endif
+if(dircorr<=0);dircorr=360+dircorr;endif
 dircorr=math_format('%3.0f',dircorr)
 
 'd mag(u*1.94384,v*1.94384)'
@@ -489,7 +488,7 @@ endwhile
 
 say dircorrentes
 
-meteo=write('tabela_'_nsar'.txt','CORRENTES,'dircorrentes'')
+meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt','CORRENTES,'dircorrentes'')
 return
 
 *################################################################################
