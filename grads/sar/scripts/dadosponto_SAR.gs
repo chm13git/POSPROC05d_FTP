@@ -262,11 +262,11 @@ while(ta<=_tf)
 'q time'
 tempt=subwrd(result,3)
 
-*'define dirvento10m=((180/3.14)*atan2(u_10m,v_10m)+180)'
-'define dirvento10m=((180/3.14)*atan2(-u_10m,-v_10m))'
+'define dirvento10m=((180/3.14)*atan2(u_10m,v_10m)+180)'
+*'define dirvento10m=((180/3.14)*atan2(-u_10m,-v_10m))'
 'd dirvento10m'
 dirvento10m=subwrd(result,4)
-if (dirvento10m<0);dirvento10m=360+dirvento10m;endif
+*if (dirvento10m<0);dirvento10m=360+dirvento10m;endif
 dirvento10m=math_format('%3.0f',dirvento10m)
 
 'define intvento10m=mag(U_10m*1.94,V_10m*1.94)'
@@ -342,7 +342,7 @@ tempt=subwrd(result,3)
 'd dironda'
 dironda=subwrd(result,4)
 * Convertendo coord lon para ficar REF inicando em Leste (so o modond precisa disso)
-if(dironda<=0);dironda=360+dironda;endif
+if(dironda<0);dironda=360+dironda;endif
 dironda=math_format('%3.0f',dironda)
 
 'd hs'
@@ -457,11 +457,11 @@ while(ta<=_tf)
 tempt=subwrd(result,3)
 
 * Calculando direcao de corrente em graus
-*'define dircorr=(57.325*atan2(u,v)+180)'
-'define dircorr=(57.325*atan2(u,v))'
+*'define dircorr=(180/3.14*atan2(u,v)+180)'
+'define dircorr=(180/3.14*atan2(u,v))'
 'd dircorr'
 dircorr=subwrd(result,4)
-if(dircorr<=0);dircorr=360+dircorr;endif
+if(dircorr<0);dircorr=360+dircorr;endif
 dircorr=math_format('%3.0f',dircorr)
 
 'd mag(u*1.94384,v*1.94384)'
