@@ -9,8 +9,9 @@ tint=TINT
 
 **********************************
 tempo=1
+tt=TZ
 while (tempo<=tf)
-tcal=(tempo-1)*3
+tcal=(tt-1)*3
 '!caldate 'AMD' + 'tcal'h yyyymmddhh > dataprog'
 rc=read(dataprog)
 data=sublin(rc,2)
@@ -45,6 +46,7 @@ say 'A variavel eh='var3
 'd 'var3
 'disable fwrite'
 
+tt=tt+tint
 tempo=tempo+tint
 endwhile
 
