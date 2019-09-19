@@ -1,3 +1,4 @@
+#!/bin/bash
 ################################################
 # Script que extrai as informações dos modelos #
 # HYCOM, WW3 e COSMO para subsidiar operações  #
@@ -11,7 +12,7 @@
 if [ $# -lt 1 ]
    then
    echo "+------------------Utilização----------------+"
-   echo "    Script para gerar os dados do .dat para   "
+   echo "    Script para gerar os dados do .bin para   "
    echo "               eventos SAR                    "
    echo "                                              "
    echo "       Entre com o horário e a data           "
@@ -56,7 +57,7 @@ MODELs=(${Atmos} ${Ondas} ${Oceano})
 Abort=480  # minutos - 8 horas de limite na tentativa de rodada do script
 Tspended=0
 
-dataprog=`caldate $AMD + 96h yyyymmddhh`
+dataprog=`caldate $AMD$HH + 96h yyyymmddhh`
 
 cd ${workdir}
 
@@ -70,18 +71,25 @@ while [ ${Abort} -gt ${Tspended} ]; do
       echo ' Preparando .bin do '${MODEL}' da data/hora: '${AMD}${HH}
       echo ' '      
       ln -sf ${Atmos_ctl} cosmo.ctl; ln -sf ${Atmos_idx} cosmo.idx
-      cp /home/operador/grads/sar/scripts/gerabin_cosmo.gs tmp1
       var1="u_10m"; var2="v_10m"; var3="t2m";
       nvar=3; tf=33; tint=2
+      cp /home/operador/grads/sar/scripts/gerabin_cosmo.gs tmp1
+      if [ ${HH} = 00 ]; then
+        tz=1; 
+        cat tmp1 | sed -e 's|TZ|'$tz'|g' > tmp2
+      else
+        tz=5; 
+        cat tmp1 | sed -e 's|TZ|'$tz'|g' > tmp2
+      fi      
+      cat tmp2 | sed -e 's|TF|'$tf'|g' > tmp1
       cat tmp1 | sed -e 's|MODEL|'$MODEL'|g' > tmp2
       cat tmp2 | sed -e 's|HH|'$HH'|g' > tmp1
       cat tmp1 | sed -e 's|AMD|'$AMD'|g' > tmp2
       cat tmp2 | sed -e 's|VAR1|'$var1'|g' > tmp1
       cat tmp1 | sed -e 's|VAR2|'$var2'|g' > tmp2
       cat tmp2 | sed -e 's|VAR3|'$var3'|g' > tmp1
-      cat tmp1 | sed -e 's|TF|'$tf'|g' > tmp2
-      cat tmp2 | sed -e 's|TINT|'$tint'|g' > tmp1
-      mv tmp1 raw.gs
+      cat tmp1 | sed -e 's|TINT|'$tint'|g' > tmp2
+      mv tmp2 raw.gs
       ${p_grads} -bpc "run raw.gs"
       mv $workdir/cosmo*bin $outdir/ 
 
@@ -97,16 +105,25 @@ while [ ${Abort} -gt ${Tspended} ]; do
       cp /home/operador/grads/sar/scripts/gerabin_ww3.gs tmp1
       var1="hs"; var2="dp";
       nvar=2; tf=33; tint=2
+      if [ ${HH} = 00 ]; then
+        tz=1; 
+        cat tmp1 | sed -e 's|TZ|'$tz'|g' > tmp2
+      else
+        tz=5; 
+        cat tmp1 | sed -e 's|TZ|'$tz'|g' > tmp2
+      fi      
+      cat tmp2 | sed -e 's|TF|'$tf'|g' > tmp1
       cat tmp1 | sed -e 's|MODEL|'$MODEL'|g' > tmp2
       cat tmp2 | sed -e 's|HH|'$HH'|g' > tmp1
       cat tmp1 | sed -e 's|AMD|'$AMD'|g' > tmp2
       cat tmp2 | sed -e 's|VAR1|'$var1'|g' > tmp1
       cat tmp1 | sed -e 's|VAR2|'$var2'|g' > tmp2
-      cat tmp2 | sed -e 's|TF|'$tf'|g' > tmp1
+      cat tmp2 | sed -e 's|VAR3|'$var3'|g' > tmp1
       cat tmp1 | sed -e 's|TINT|'$tint'|g' > tmp2
       mv tmp2 raw.gs
       ${p_grads} -bpc "run raw.gs"
       mv $workdir/ww3*bin $outdir/
+
       if [ -e ${outdir}/${MODEL}_met_$dataprog.bin ]; then
         touch ${workdir}/${MODEL}_SAFO
       fi
