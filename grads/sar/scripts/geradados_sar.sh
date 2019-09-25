@@ -58,6 +58,7 @@ Abort=480  # minutos - 8 horas de limite na tentativa de rodada do script
 Tspended=0
 
 dataprog=`caldate $AMD$HH + 96h yyyymmddhh`
+dataprog_hyc=`caldate $AMD$HH + 90h yyyymmddhh`
 
 cd ${workdir}
 
@@ -135,7 +136,7 @@ while [ ${Abort} -gt ${Tspended} ]; do
       ln -sf ${Oceano_dado} hycom.nc
       cp /home/operador/grads/sar/scripts/gerabin_hycom.gs tmp1
       var1="U"; var2="V"; var3="TEMPERATURE";
-      nvar=3; tf=17; tint=1
+      nvar=3; tf=16; tint=1
       cat tmp1 | sed -e 's|MODEL|'$MODEL'|g' > tmp2
       cat tmp2 | sed -e 's|HH|'$HH'|g' > tmp1
       cat tmp1 | sed -e 's|AMD|'$AMD'|g' > tmp2
@@ -147,7 +148,7 @@ while [ ${Abort} -gt ${Tspended} ]; do
       mv tmp1 raw.gs
       ${p_grads} -bpc "run raw.gs"
       mv $workdir/hycom*bin $outdir/
-      if [ -e ${outdir}/${MODEL}_met_$dataprog.bin ]; then
+      if [ -e ${outdir}/${MODEL}_met_$dataprog_hyc.bin ]; then
         touch ${workdir}/${MODEL}_SAFO
       fi
     elif [ ${HH} = 00 ] && [ -e ${workdir}/${Atmos}_SAFO ] && [ -e ${workdir}/${Ondas}_SAFO ] && [ -e ${workdir}/${Oceano}_SAFO ]; then
