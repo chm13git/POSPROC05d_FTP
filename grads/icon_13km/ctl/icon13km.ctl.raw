@@ -1,0 +1,33 @@
+dset /home/operador/grads/icon_13km/dados/dadosHH/ICONFILE
+index /home/operador/grads/icon_13km/ctl/ctlHH/icon13km_00.grib2.idx
+undef 9.999E+20
+title icon13km_00.grib2
+* produced by g2ctl v0.1.1
+* command line options: icon13km_00.grib2
+* griddef=1:0:(2879 x 1441):grid_template=0:winds(N/S): lat-lon grid:(2879 x 1441) units 1e-06 input WE:SN output WE:SN res 48 lat -90.000000 to 90.000000 by 0.125000 lon 180.000000 to 179.750000 by 0.125000 #points=4148639:winds(N/S)
+
+dtype grib2
+ydef 1441 linear -90.000000 0.125
+xdef 2879 linear -180 0.125000
+tdef 79 linear HHZDATAGRADS 1hr
+* PROFILE hPa
+zdef 3 levels 100000 85000 50000
+options pascals
+vars 16
+RAIN_CON   0,1,0   0,1,76,1 ** surface Convective Rain Rate    Validation [kg/m^2/s]
+SNOW_CON   0,1,0   0,1,55,1 ** surface Convective Snowfall Rate Water Equivalent [kg/m^2/s]
+TD2m   0,103,2   0,0,6 ** 2 m above ground Dew Point Temperature [K]
+FI    3,100  0,3,4 ** (1000 850 500) Geopotential [m^2/s^2]
+RAIN_GSP   0,1,0   0,1,77,1 ** surface Large Scale Rain Rate    Validation [kg/m^2/s]
+SNOW_GSP   0,1,0   0,1,56,1 ** surface Large Scale Snowfall Rate Water Equivalent [kg/m^2/s]
+PMSL   0,101,0   0,3,1 ** mean sea level Pressure Reduced to MSL [Pa]
+T2m   0,103,2   0,0,0 ** 2 m above ground Temperature [K]
+U250   0,100,25000   0,2,2 ** 250 mb U-Component of Wind [m/s]
+U500   0,100,50000   0,2,2 ** 500 mb U-Component of Wind [m/s]
+U850   0,100,85000   0,2,2 ** 850 mb U-Component of Wind [m/s]
+U10m   0,103,10   0,2,2 ** 10 m above ground U-Component of Wind [m/s]
+V250   0,100,25000   0,2,3 ** 250 mb V-Component of Wind [m/s]
+V500   0,100,50000   0,2,3 ** 500 mb V-Component of Wind [m/s]
+V850   0,100,85000   0,2,3 ** 850 mb V-Component of Wind [m/s]
+V10m   0,103,10   0,2,3 ** 10 m above ground V-Component of Wind [m/s]
+ENDVARS
