@@ -11,11 +11,11 @@ _lati=subwrd(argsf,3)
 _loni=subwrd(argsf,4)
 _nsar=subwrd(argsf,5)
 
-say 'Data inicial: '_datai
-say 'Data final:   '_dataf
-say 'Latitude:     '_lati
-say 'Longitude:    '_loni
-say 'Nome SAR:     '_nsar
+say 'Data inicial:            '_datai
+say 'Data final:              '_dataf
+say 'Latitude:                '_lati
+say 'Longitude:               '_loni
+say 'Nome SAR:                '_nsar
 
 * Testando se todos os args foram passados
 if(_datai='') | (_dataf='') | (_lati='') | (_loni='') | (_nsar='')
@@ -32,11 +32,17 @@ _ddi=substr(_datai,7,2)
 _hhi=substr(_datai,9,2)
 
 * Reescrevendo data inicial de maneira modificada
-'!caldate '_datai' + 0h 'hhZddMMMyyyy' | tr [a-z] [A-Z] > dataim'
-rc=read(dataim)
+*'!date %+b ${DATAI} + 0h 'hhZddMMMyyyy''
+*'!cd /home/operador/grads/sar/scripts'
+*'!caldate '_datai' + 0h 'hhZddMMMyyyy' | tr [a-z] [A-Z] > /home/operador/grads/sar/scripts/dataim'
+*'!cat /tmp/dataim'
+*'!rodacaldate.sh '_datai
+rc=read("/home/operador/grads/sar/scripts/dataim")
+say rc
 _timei=sublin(rc,2)
-rc=close(dataim)
-'!rm dataim'
+say _timei
+rc=close("/home/operador/grads/sar/scripts/dataim")
+'!rm /home/operador/grads/sar/scripts/dataim'
 
 ** Carregando variaveis de tempo para Data Final
 _aaaaf=substr(_dataf,1,4)
@@ -45,11 +51,13 @@ _ddf=substr(_dataf,7,2)
 _hhf=substr(_dataf,9,2)
 
 * Reescrevendo data final de maneira modificada
-'!caldate '_dataf' + 0h 'hhZddMMMyyyy' | tr [a-z] [A-Z] > datafm'
-rc=read(datafm)
+*'!/usr/bin/caldate '_dataf' + 0h 'hhZddMMMyyyy' | tr [a-z] [A-Z] > datafm'
+rc=read("/home/operador/grads/sar/scripts/datafm")
+say rc
 _timef=sublin(rc,2)
-rc=close(datafm)
-'!rm datafm'
+say _timef
+rc=close("/home/operador/grads/sar/scripts/datafm")
+'!rm /home/operador/grads/sar/scripts/datafm'
 
 * Definindo emails a serem enviados para cada regiao de SAR
 
@@ -93,6 +101,8 @@ _arqatm=dirsar'/ctl/cosmo_met.ctl'
 _arqond=dirsar'/ctl/ww3icon_met.ctl'
 _arqoce=dirsar'/ctl/hycom_met.ctl'
 
+* Fazendo links para arquivos binarios
+
 * Gravando args lat e lon numa var para uso nas funcoes
 args=_lati" "_loni
 
@@ -123,7 +133,7 @@ tsm(args)
 *'!sed -e "s/ ,g" tabela_'%_nsar%'.txt'
 *'!mail -s "TABELA BPME SAR '_nsar'" -t '_emailbrasil' '_emailregional' -A tabela_'_sar'.txt'
 *'!cat msg_padrao.txt | mail -s "TABELA BPME SAR '_nsar'" '_emailbrasil' -A tabela_'_sar'.txt'
-*'!cp tabela_'_nsar'.txt /home/operador/grads/sar/tabelas'
+*'!cp /home/operador/grads/sar/tabelas/tabela_'_nsar'.txt /home/servico/scripts/tabela_'_nsar'.txt'
 
 'quit'
 
@@ -172,7 +182,7 @@ endwhile
 
 say tempo
 
-meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt','TEMPO,'tempo'')
+meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt',''lat1','lon1',TEMPO,'tempo'')
 return
 
 *################################################################################
@@ -225,8 +235,8 @@ endwhile
 say temp2ms
 *say temperaturasmax
 
-*meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt','TAIR TEMP,'tempo'')
-meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt','TEMP AR,'temp2ms'')
+*meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt',''lat1','lon1',TAIR TEMP,'tempo'')
+meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt',''lat1','lon1',TEMP AR,'temp2ms'')
 return
 
 *################################################################################
@@ -295,7 +305,7 @@ endwhile
 
 say dirintvento10ms
 
-meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt','VENTOS,'dirintvento10ms'')
+meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt',''lat1','lon1',VENTOS,'dirintvento10ms'')
 return
 
 *################################################################################
@@ -338,7 +348,7 @@ tempt=subwrd(result,3)
 * Convertendo de radianos para graus. Usando a direcao de pico (dp) como REF
 'define u =cos(dp)'
 'define v =sin(dp)'
-'define dironda=(180/3.14*atan2(-u,-v))'
+'define dironda=((180/3.14)*atan2(-u,-v))'
 'd dironda'
 dironda=subwrd(result,4)
 * Convertendo coord lon para ficar REF inicando em Leste (so o modond precisa disso)
@@ -369,7 +379,7 @@ endwhile
 
 say dirhss
 
-meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt','ONDAS,'dirhss'')
+meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt',''lat1','lon1',ONDAS,'dirhss'')
 return
 
 *################################################################################
@@ -422,8 +432,8 @@ endwhile
 
 say tsms
 
-*meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt',''lat1';'lon1';TTSM;'tempo'')
-meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt','TSM,'tsms'')
+*meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt',''lat1','lon1','lat1';'lon1';TTSM;'tempo'')
+meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt',''lat1','lon1',TSM,'tsms'')
 return
 
 *################################################################################
@@ -488,7 +498,7 @@ endwhile
 
 say dircorrentes
 
-meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt','CORRENTES,'dircorrentes'')
+meteo=write('/home/operador/grads/sar/tabelas/tabela_'_nsar'.txt',''lat1','lon1',CORRENTES,'dircorrentes'')
 return
 
 *################################################################################
