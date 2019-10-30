@@ -45,6 +45,11 @@ TARGETICON=${DIRICONfiles}/target_grid_world_0125.txt
 GRIDICON=${DIRICONfiles}/icon_grid_0026_R03B07_G.nc
 WFILEICON=${DIRICONfiles}/weights_icogl2world_0125.nc
 
+
+	echo "+----------------------------------------+"
+	echo "+ Iniciando o Download do Dado do ICON   +" 
+	echo "+----------------------------------------+"  
+	date
 # A programacao abaixo foi feita para que o diretorio "u" fosse associado a
 # a variavel "U_10m" e assim por diante com todas as variáveis...
 
@@ -114,6 +119,7 @@ NAME="$NAME2 $NAME2 $NAME2 $NAME2 $NAME2 $NAME2 $NAME1 $NAME1 $NAME1 $NAME1 $NAM
 
 ############ INTERPOLAÇÃO PARA GRADE REGULAR ##############
 # Gera o arquivo com os pesos para interpolação (roda só 1x)
+date
 cd ${DIRICONfiles} 
 #/usr/local/bin/cdo gennn,${TARGETICON} ${GRIDICON} ${WFILEICON}
 /usr/bin/cdo gennn,${TARGETICON} ${GRIDICON} ${WFILEICON}
@@ -140,11 +146,8 @@ for in_file in `ls -1 ${DIRICONdados}/*.grib2`; do
 
 done
 for VAR in $VARS; do
-#/usr/local/bin/cdo mergetime ${DIRICONdados}/*${VAR}*_regulargrid.grib2  ${DIRICONdados}/icon13km_${VAR}_${HH}.grib2
 /usr/bin/cdo mergetime ${DIRICONdados}/*${VAR}*_regulargrid.grib2  ${DIRICONdados}/icon13km_${VAR}_${HH}.grib2
 done
 
-#/usr/local/bin/cdo merge ${DIRICONdados}/icon13km*.grib2  ${DIRICONdados}/icon13km_${HH}.grib2
-/usr/bin/cdo merge ${DIRICONdados}/icon13km*.grib2  ${DIRICONdados}/icon13km_${HH}.grib2
-
+#/usr/bin/cdo merge ${DIRICONdados}/icon13km*.grib2  ${DIRICONdados}/icon13km_${HH}.grib2
 #FIM
