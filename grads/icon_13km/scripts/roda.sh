@@ -18,7 +18,7 @@ cd /home/operador/grads/icon_13km/gs
 			cat titulo >> raw.gs
 			cat raw.gs | sed -e 's|mres|brmap_hires.dat|g' > raw1
 			mv raw1 raw.gs
-			#/opt/opengrads/Contents/grads -bpc raw.gs
+			/opt/opengrads/Contents/grads -bpc raw.gs
 			/usr/local/bin/grads -bpc raw.gs
 #			rm raw*.gs
 	done
