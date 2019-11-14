@@ -10,7 +10,7 @@ HH=$1
 HSTART=0
 HSTOP=1
 moddir="/home/operador/grads/icon_13km"
-arqctls="icon13km_1000_FI.ctl icon13km_500_FI.ctl icon13km_850_FI.ctl icon13km_U_10M.ctl icon13km_V_10M.ctl icon13km_T_2M.ctl icon13km_TD_2M.ctl icon13km_850_U.ctl icon13km_850_V.ctl icon13km_500_U.ctl icon13km_500_V.ctl icon13km_250_U.ctl icon13km_250_V.ctl icon13km_PMSL.ctl icon13km_RAIN_CON.ctl icon13km_RAIN_GSP.ctl icon13km_SNOW_CON.ctl icon13km_SNOW_GSP.ctl"
+arqctls="icon13km_1000_FI.ctl icon13km_500_FI.ctl icon13km_850_FI.ctl icon13km_U_10M.ctl icon13km_V_10M.ctl icon13km_T_2M.ctl icon13km_TD_2M.ctl icon13km_850_U.ctl icon13km_850_V.ctl icon13km_500_U.ctl icon13km_500_V.ctl icon13km_250_U.ctl icon13km_250_V.ctl icon13km_PMSL.ctl icon13km_RAIN_CON.ctl icon13km_RAIN_GSP.ctl icon13km_SNOW_CON.ctl icon13km_SNOW_GSP.ctl icon13km_VMAX_10M.ctl"
 areas="atl met ant"
 
 if [ $# -ne 1 ];then
@@ -33,7 +33,7 @@ date
 	echo Começando pelo Script "get_icon13.sh" que faz download dos dados de ${HH}Z
 	echo ==========================================================================
 
-#	/home/operador/grads/icon_13km/scripts/get_icon13.sh ${HH}
+	/home/operador/grads/icon_13km/scripts/get_icon13.sh ${HH} > /home/operador/grads/icon_13km/scripts/logs/get_icon13km_${HH}.log 2>&1
 
 	echo
 	echo criando o ctl
@@ -69,7 +69,13 @@ date
                         /usr/local/bin/grads -bpc raw.gs
         done
 
+	echo =========================================================================
+        echo Realizandoo o backup dos Gribs da Rodada de ${HH} .............
+        echo ==========================================================================
 
+
+	/home/operador/grads/icon_13km/scripts/backup_icon13km.sh ${HH} > /home/operador/grads/icon_13km/scripts/logs/backup_icon13km${HH}.log 2>&1
+	
 	echo
 	echo FIM ICON ATLANTICO ${HH}Z
 	date
