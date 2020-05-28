@@ -1,4 +1,5 @@
-#!/bin/bash -x
+#!/bin/bash -xv
+date
 ################################################################
 # Script que realiza o Download da PMSL do Modelo Global ICON  #
 # para confeccao da carta sinótica digital                     #
@@ -18,7 +19,7 @@ fi
 
 HH=$1 #HORARIO DE SIMULAÇÃO 00Z OU 12Z
 HSTART=0
-HSTOP=0
+HSTOP=12
 
 # Carrega a data
 AMD=`cat ~/datas/datacorrente${HH}`
@@ -67,7 +68,7 @@ while [ $flag -eq 1 ];do
         	NVARS=`echo $VARS | wc -w`
         	echo "$NVARS"
 
-        		for PROG in `seq -s " " -f "%03g" ${HSTART} 1 ${HSTOP}`;do
+        		for PROG in `seq -s " " -f "%03g" ${HSTART} 6 ${HSTOP}`;do
                 		for VAR in `seq 1 ${NVARS}` ; do
                         	VAR1=`echo ${DIRVAR} | cut -d" " -f${VAR}`
                         	VAR2=`echo ${VARS}   | cut -d" " -f${VAR}`
@@ -130,3 +131,4 @@ for in_file in `ls -1 ${DIRICONdados}/*.grib2`; do
 
 done
 # FIM DO DOWNLOAD DO MODELO MAIS LINDO DO MUNDO!!!!!!!!
+date
