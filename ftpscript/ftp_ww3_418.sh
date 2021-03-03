@@ -17,7 +17,7 @@ if [ $# -ne 4 ]
 then
    echo
    echo "Entre com a forcante (gfs, icon ou cosmo), com o horario de referencia (00 ou 12),"
-   echo "com a area (glo, iap, met, sse, ne, ant, car e lib), e com o caminho (01 e 07 ou 31)"
+   echo "com a area (glo, iap, met, sse, ne, ant, car e lib), e com o caminho (01 ou 31)"
    echo
    exit
 fi
@@ -144,16 +144,9 @@ esac
 
 if [ $CAMINHO -eq 01 ]
 then
-  caminho07=/mnt/nfs/dpns09/data/operador/mod_ondas/ww3_418/output
-  CAMINHO=$caminho07
-  echo $caminho07
-fi
-
-if [ $CAMINHO -eq 07 ]
-then
-  caminho07=/mnt/nfs/dpns09/data/operador/mod_ondas/ww3_418/output
-  CAMINHO=$caminho07
-  echo $caminho07
+  caminho01=/mnt/nfs/dpns33/data1/ww3desenv/mod_ondas/ww3_418/output
+  CAMINHO=$caminho01
+  echo $caminho01
 fi
 
 if [ $CAMINHO -eq 31 ]
@@ -202,7 +195,7 @@ ni=0
 
 MSG="POS-PROC DO WW3/${FORC} ${datahoje} ${HH}Z INICIADO"
 
-/usr/bin/input_status.php ww3${FORC} ${HH} ${RODADA} AMARELO "${MSG}"
+#/usr/bin/input_status.php ww3${FORC} ${HH} ${RODADA} AMARELO "${MSG}"
 
 
 #---------------------------------------
@@ -314,47 +307,48 @@ fi
 # Gerando Ondogramas
 
 
-if [ $AREA == "iap" ] || [ $AREA == "met" ]  || [ $AREA == "sse" ]  || [ $AREA == "ne" ]  || [ $AREA == "car" ]
-then
-
- /home/operador/grads/ww3_418/scripts/geraondograma.sh $HH $FORC $AREA
- #cd $WORKDIR/ww3${AREA}/ondogramas/scripts
- ##/usr/local/bin/atualiza_status.pl ${STATUS} 1 "FAZENDO ONDOGRAMAS"
-
+if [ $AREA == "met" ]  || [ $AREA == "sse" ]  || [ $AREA == "ne" ]  || [ $AREA == "car" ] || [ $AREA == "iap" ]; then
 
  echo
  echo 'FAZENDO ONDOGRAMA '${AREA}''
  echo
+ cd /home/operador/grads/ww3_418/scripts/
+ ./geraondograma.sh $HH $FORC $AREA
+ ##/usr/local/bin/atualiza_status.pl ${STATUS} 1 "FAZENDO ONDOGRAMAS"
 
 # $WORKDIR/ww3${AREA}/ondogramas/scripts/geraondograma_${AREA}.sh $HH 
-
 # /home/operador/grads/ww3_418/ww3gfs/ww3met/ondogramas/scripts/geraondograma_met_teste.sh $HH $FORC $AREA
 
 fi
 
-# --------------------
-# Ondogramas Comissoes
+#---------Movendo figuras para a pasta internet-----------------
 
-if [ \( $AREA == "iap" \) ] || [ \( $AREA == "met" \) ]
-then
-  /home/operador/ftpscript/geraondograma_comissao.sh $HH $CAMINHO
-fi
-
-rm /home/operador/grads/ww3_418/scripts/ww3.ctl
-rm /home/operador/grads/ww3_418/scripts/ww3.grads
+/home/operador/ftpscript/ftp_internet.sh $HH ww3${FORC}
 
 # ---------------------
 # Ondogramas Dinamicos #2017NOV23
 
 #if [ \( "${AREA}" == "iap" -a "${FORC}" == "gfs" \) ]; then
 
-if [ \( "${FORC}" == "gfs" -a "${AREA}" == "ant" \) ] || [ \( "${FORC}" == "icon" -a "${AREA}" == "ant" \) ]; then
- /home/operador/anaconda3/bin/python /home/operador/grads/ww3_418/scripts/ww3_tabela_Drake.py $FORC $HH
+if [ ${FORC} == "gfs" ] && [ ${AREA} == "ant" ] || [ ${FORC} == "icon" ] && [ ${AREA} == "ant" ]; then
+ /home/operador/anaconda3/bin/python /home/operador/grads/ww3_418/scripts/ww3_tabela_Drake_Nelson.py $FORC $HH
+ /home/operador/anaconda3/bin/python /home/operador/grads/ww3_418/scripts/ww3_tabela_Drake_Simpson.py $FORC $HH
+ /home/operador/anaconda3/bin/python /home/operador/grads/ww3_418/scripts/ww3_tabela_Ilhas_Orcades_Sul.py $FORC $HH
 fi
+
+# --------------------
+# Ondogramas Comissoes
+
+if [ $AREA == "iap" ] || [ $AREA == "met" ];then
+  /home/operador/ftpscript/geraondograma_comissao.sh $HH $CAMINHO
+fi
+
+rm /home/operador/grads/ww3_418/scripts/ww3.ctl
+rm /home/operador/grads/ww3_418/scripts/ww3.grads
 
 #---------------------Auxílio 2o DN----------------------------------------------
 
-if [ \( "${AREA}" == "met" \) ] ; then
+if [ ${AREA} == "met" ] ; then
  echo
  echo 'FAZENDO AUXILIO para o 2o DN'
  echo
@@ -366,12 +360,20 @@ if [ \( "${AREA}" == "met" \) ] ; then
 fi
 #-------------------------------------------------------------------------------
 
+if [ ${AREA} == "met" ]; then
+  
+	echo 'FAZENDO AUXILIO para area '${AREA}''
+	/home/operador/grads/auxilio_decisao/scripts/auxilio.sh $HH ww3${AREA}
+	/home/operador/grads/auxilio_decisao/scripts/auxilio.sh $HH ww3${AREA}2
+else 
+	/home/operador/grads/auxilio_decisao/scripts/auxilio.sh $HH ww3${AREA}
+fi
 
-# echo
-# echo 'FAZENDO AUXILIO para area '${AREA}''
-# echo
+#-------ESPECTRO DE ONDA---------------------------------------------------------------------
 
-#/home/operador/grads/auxilio_decisao/scripts/auxilio.sh $HH ww3${AREA}
+/home/operador/grads/ww3_418/scripts/espectro_onda.py $FORC $HH $datahojea
+
+#-------------------------------------------------------------------------------------------
 
 #1T Andressa DAgostini: Comentado em 16AGO2019 por que a Petrobras está utilizando os dados horários enviados pela DPNS31
 #/home/operador/grads/ww3_418/scripts/nc3_to_nc4.sh ${FORC} ${HH} ${AREA}
