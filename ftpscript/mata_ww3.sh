@@ -9,4 +9,5 @@
 # 1T(RM2-T) Andressa D'Agostini                    #
 ####################################################                             
 
+kill -9 `ps -ef | grep ww3 | awk ' {print $3} '`
 kill -9 `ps -ef | grep ww3 | awk ' {print $2} '`
