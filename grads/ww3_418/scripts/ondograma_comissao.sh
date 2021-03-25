@@ -46,11 +46,18 @@ exit 12
 ;;
 esac
 
-if [ $CAMINHO -eq 07 ]
+#if [ $CAMINHO -eq 07 ]
+#then
+#  caminho07="/mnt/nfs/dpns09/data/operador/mod_ondas/ww3_418/output"
+#  CAMINHO=$caminho07
+#  echo $caminho07
+#fi
+
+if [ $CAMINHO -eq 01 ]
 then
-  caminho07="/mnt/nfs/dpns09/data/operador/mod_ondas/ww3_418/output"
-  CAMINHO=$caminho07
-  echo $caminho07
+  caminho01="/mnt/nfs/dpns33/data1/ww3desenv/mod_ondas/ww3_418/output"
+  CAMINHO=$caminho01
+  echo $caminho01
 fi
 if [ $CAMINHO -eq 31 ]
 then
@@ -64,9 +71,9 @@ fi
 
 datahoje=`cat ~/datas/datacorrente${HH}`
 
-rm /home/operador/grads/ww3_418/scripts/ww3.ctl
-rm /home/operador/grads/ww3_418/scripts/ww3.grads
 
+rm /home/operador/grads/ww3_418/scripts/ww3.ctl
+rm /home/operador/grads/ww3_418/scripts/ww3.grad
 ln -s $CAMINHO/ww3${FORC}/wave.${datahoje}/${AREA}.t${HH}z.ctl $ONDOGSCR/ww3.ctl
 ln -s $CAMINHO/ww3${FORC}/wave.${datahoje}/${AREA}.t${HH}z.grads $ONDOGSCR/ww3.grads
 
@@ -77,8 +84,15 @@ cd $ONDOGSCR
 #/opt/opengrads/Contents/grads -bpc "run ondogramas_comissaoX.gs"
 #/opt/opengrads/Contents/grads -bpc "run ondogramas_comissaoY.gs"
 
-mv *.gif $ONDOGDIR/ww3_418/ww3$FORC/ww3${AREA}${HH}
-mv *.jpg $ONDOGDIR/ww3_418/ww3$FORC/ww3${AREA}${HH}
+if [ $AREA = glo ]
+then
+   area=iap
+else
+   area=$AREA
+fi
+
+mv *.gif $ONDOGDIR/ww3_418/ww3$FORC/ww3${area}${HH}
+mv *.jpg $ONDOGDIR/ww3_418/ww3$FORC/ww3${area}${HH}
 
 rm /home/operador/grads/ww3_418/scripts/ww3.ctl
 rm /home/operador/grads/ww3_418/scripts/ww3.grads

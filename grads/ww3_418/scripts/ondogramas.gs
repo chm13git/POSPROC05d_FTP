@@ -551,6 +551,19 @@ plota()
 'printim ONDOGDIR/ww3sseHH/ondograma_GUARATUBA.gif'
 'printim ONDOGDIR/ww3sseHH/ondograma_GUARATUBA.jpg'
 
+*PARANAGUA  
+'c'
+'set lat -25.70'
+'set lon 312.13'
+plota()
+'draw string  4.2 10.8 PARANAGUA'
+'draw string 4.2 10.3  lat: -25.7 lon: -47.87 (45km da costa)'
+'draw string 4.2 9.8 ref: 'var'.'
+'printim ONDOGDIR/ww3metHH/ondograma_PARANAGUA.gif'
+'printim ONDOGDIR/ww3metHH/ondograma_PARANAGUA.jpg'
+'printim ONDOGDIR/ww3sseHH/ondograma_PARANAGUA.gif'
+'printim ONDOGDIR/ww3sseHH/ondograma_PARANAGUA.jpg'
+
 *S_FRAN_SUL 
 'c'
 'set lat -26.23'
@@ -1166,6 +1179,34 @@ plota()
 'draw string 4.2 9.8 ref: 'var'.'
 'printim ONDOGDIR/ww3iapHH/ondograma_62029.gif'
 'printim ONDOGDIR/ww3iapHH/ondograma_62029.jpg'
+
+
+*Transpetro - ES
+'c'
+'set lat  -18.98'
+'set lon  320.29'
+plota()
+'draw string 4.2 10.8 TERMINAL NORTE CAPIXABA'
+'draw string 4.2 10.3 lat: -18.98 lon: -39.70'
+'draw string 4.2 9.8 ref: 'var'.'
+'printim ONDOGDIR/ww3metHH/ondograma_TERMINAL_N_CAPIXABA.gif'
+'printim ONDOGDIR/ww3metHH/ondograma_TERMINAL_N_CAPIXABA.jpg'
+'printim ONDOGDIR/ww3sseHH/ondograma_TERMINAL_N_CAPIXABA.gif'
+'printim ONDOGDIR/ww3sseHH/ondograma_TERMINAL_N_CAPIXABA.jpg'
+
+
+*Transpetro - RN
+'c'
+'set lat  -4.87'
+'set lon  323.63'
+plota()
+'draw string 4.2 10.8 TERMINAL DE GUAMARE'
+'draw string 4.2 10.3 lat: -04.87 lon: -36.37'
+'draw string 4.2 9.8 ref: 'var'.'
+'printim ONDOGDIR/ww3metHH/ondograma_TERMINALGUAMARE.gif'
+'printim ONDOGDIR/ww3metHH/ondograma_TERMINALGUAMARE.jpg'
+'printim ONDOGDIR/ww3neHH/ondograma_TERMINALGUAMARE.gif'
+'printim ONDOGDIR/ww3neHH/ondograma_TERMINALGUAMARE.jpg'
 
 
 'quit'
