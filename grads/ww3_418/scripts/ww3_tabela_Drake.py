@@ -40,6 +40,7 @@ print('')
 os.getcwd()
 
 ww3dir  ='/mnt/nfs/dpns32/data1/operador/mod_ondas/ww3_418/'
+#ww3dir  ='/mnt/nfs/dpns32/data1/ww3desenv/home/mod_ondas/'
 outdirbck=ww3dir+'backup/ww3'+mod+'/'
 savedir='/home/operador/ondogramas/ww3_418/ww3'+mod+'/ww3ant'+str(cyc)+'/'
 savedir2='/home/operador/grads/produtos_operantar/'+str(cyc)+'hmg/'
@@ -53,18 +54,18 @@ mpl.use('Agg') # Force matplotlib to not use any Xwindows backend.
 # Extraindo as variaveis da saida do WW3
 nc_f=outdirbck+'ww3'+mod+'_ant_'+str(datai)+str(cyc)+'.nc'
 nc_fid=Dataset(nc_f, 'r')
-lat=nc_fid.variables['LATITUDE'][:]
-lon=nc_fid.variables['LONGITUDE'][:]
+lat=nc_fid.variables['latitude'][:]
+lon=nc_fid.variables['longitude'][:]
 lon=lon-360
 lon_grid,lat_grid=plab.meshgrid(lon,lat)
 grid = pr.geometry.GridDefinition(lats=lat_grid, lons=lon_grid)
-hs = nc_fid.variables['HS'][:]
-dire = nc_fid.variables['DIR'][:]
-dp = nc_fid.variables['DP'][:]
-u_wnd=nc_fid.variables['UWND'][:]
-v_wnd=nc_fid.variables['VWND'][:]
+hs = nc_fid.variables['hs'][:]
+dire = nc_fid.variables['dir'][:]
+dp = nc_fid.variables['dp'][:]
+u_wnd=nc_fid.variables['uwnd'][:]
+v_wnd=nc_fid.variables['vwnd'][:]
 prg=np.size(u_wnd)
-freqpeak = nc_fid.variables['FP'][:] #wave peak frequency
+freqpeak = nc_fid.variables['fp'][:] #wave peak frequency
 perpeak = 1/freqpeak
 
 # Pontos da derrota da Passagem do Drake: 
@@ -190,7 +191,8 @@ elif (mod == 'gfs'):
    MOD='GFS';
 elif (mod == 'icon'):
    MOD='ICON';
- 
+elif (mod == 'ico13'):
+   MOD='ICON'; 
 
 # Tabela para HS
 cells = np.array(hs_sv[0:20]); cells=cells.T               
@@ -233,7 +235,7 @@ tb = plt.table(cellText = cells,
 plt.axis('off')
 plt.title('Altura Significativa de Onda (m) CHM/WW3/'+MOD+' '+str(cyc)+'Z '+datai,fontsize=10,loc='left')
 plt.savefig('Tabela_Drake_'+datai+'_hs_ww3'+mod+'_'+str(cyc)+'.png', bbox_inches='tight',dpi=1500)
-plt.savefig(savedir2+'Tabela_Drake_'+datai+'_hs_ww3'+mod+'_'+str(cyc)+'.png', bbox_inches='tight',dpi=1500)
+#plt.savefig(savedir2+'Tabela_Drake_'+datai+'_hs_ww3'+mod+'_'+str(cyc)+'.png', bbox_inches='tight',dpi=1500)
 plt.close('all')
 
 # Tabela para VENTO a 10m
@@ -276,7 +278,7 @@ tb = plt.table(cellText = cells,
 plt.axis('off')
 plt.title('Vento a 10m (n'u'ós) CHM/WW3/'+MOD+' '+str(cyc)+'Z '+datai,fontsize=10,loc='left')
 plt.savefig('Tabela_Drake_'+datai+'_wnd10'+mod+''+str(cyc)+'.png', bbox_inches='tight',dpi=1500)
-plt.savefig(savedir2+'Tabela_Drake_'+datai+'_wnd10'+mod+'_'+str(cyc)+'.png', bbox_inches='tight',dpi=1500)
+#plt.savefig(savedir2+'Tabela_Drake_'+datai+'_wnd10'+mod+'_'+str(cyc)+'.png', bbox_inches='tight',dpi=1500)
 plt.close('all')
 
 # Tabela para periodo de pico
@@ -319,7 +321,7 @@ tb = plt.table(cellText = cells,
 plt.axis('off')
 plt.title('Per'u'íodo de Pico (seg) CHM/WW3/'+MOD+' '+str(cyc)+'Z '+datai,fontsize=10,loc='left')
 plt.savefig('Tabela_Drake_'+datai+'_perpeak_ww3'+mod+'_'+str(cyc)+'.png', bbox_inches='tight',dpi=1500)
-plt.savefig(savedir2+'Tabela_Drake_'+datai+'_perpeak_ww3'+mod+'_'+str(cyc)+'.png', bbox_inches='tight',dpi=1500)
+#plt.savefig(savedir2+'Tabela_Drake_'+datai+'_perpeak_ww3'+mod+'_'+str(cyc)+'.png', bbox_inches='tight',dpi=1500)
 plt.close('all')
 
 
