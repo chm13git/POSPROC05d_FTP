@@ -20,7 +20,7 @@ then
     echo "Entre com a forçante (gfs, icon ou cosmo), horario de referencia (00 ou 12),"
     echo "caminho (01 ou 31) e data (opcional)"
     echo
-    echo "Ex: ww3_grib_vital.sh cosmo 00 31 20210318"
+    echo "Ex: ww3_zygrib_vital.sh cosmo 00 31 20210318"
     exit
 fi
 
